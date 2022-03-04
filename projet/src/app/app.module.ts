@@ -24,15 +24,23 @@ import { WorkComponent } from './work/work.component';
  
  import { FormsModule, ReactiveFormsModule } from '@angular/forms';
  import { MatInputModule } from '@angular/material/input';
-
-
+  import { MatPaginatorModule } from '@angular/material/paginator';
+ import { MatTableModule } from '@angular/material/table';
+ import { MatSortModule } from '@angular/material/sort';
+ import { MatProgressBarModule } from '@angular/material/progress-bar';
+ import {MatRadioModule} from '@angular/material/radio';
+ import {MatCheckboxModule} from '@angular/material/checkbox';
+import { ConfigComponent } from './config/config.component';
+import { FlexLayoutModule } from '@angular/flex-layout';
+ 
 @NgModule({
   declarations: [
     AppComponent,
     WorkComponent,
+    ConfigComponent,
    ],
   imports: [
-   
+    FlexLayoutModule,
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
@@ -50,9 +58,12 @@ import { WorkComponent } from './work/work.component';
     MatKeyboardModule,
     NgxBarcodeModule,
     MatFormFieldModule,
-    
- 
-     
+    MatRadioModule,
+    MatCheckboxModule,
+    MatPaginatorModule,
+    MatTableModule,
+    MatSortModule,
+    MatProgressBarModule,
     
   ],
   providers: [DatePipe , MatDatepickerModule,Printer,DocumentViewer,FileOpener  ,File , FilePath],

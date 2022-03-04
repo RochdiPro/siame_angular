@@ -3,4 +3,19 @@
     {
         #non-printable { display: none; }
         #printable { display: block; }
+        body {
+            content:url('./../../assets/images/prdoduit.png');
+           }
+           * {
+            -webkit-print-color-adjust: exact;
+        }
+    }
+
+  
+    .bc_image{
+        background-image: url('./../../assets/images/prdoduit.png');
+        background-size: cover;
+        background-repeat: no-repeat;
+        //height: 100%;
+
     }

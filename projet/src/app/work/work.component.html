@@ -1,17 +1,175 @@
- 
-<div  id="printable" >
+<h1 id="non-printable"
+  style="text-align: center;margin-top: 3%;margin-bottom: 3%; text-shadow: 2px 4px 3px rgba(0,0,0,0.3); font-size: 600%;">
+  Etiquetage des produits </h1>
+<div class="row">
+
+  <div class="col-md-12">
+    <div id="non-printable" class=" col-md-12 main-card mb-3 card" style="margin-top:  2%;">
+      <div class="card-body">
+        <section [formGroup]="form">
+
+          <mat-form-field class="custom-width" style="width: 15%;">
+            <mat-label>N° d'ordre de Fabrication</mat-label>
+            <input matInput placeholder="ordre de Fabrication" formControlName="of" [matKeyboard]="'de-CH'"
+              (keyup)="g_of()">
+          </mat-form-field>
+
+          <mat-radio-group aria-label="Select an option" style="margin-left: 2%;">
+            <mat-radio-button value="auto" (change)="changermode($event)">Mode Automatique </mat-radio-button>
+            <mat-radio-button checked="true" value="manuel" style="margin-left: 3%;" (change)="changermode($event)">Mode
+              Manuel </mat-radio-button>
+          </mat-radio-group>
 
 
-<table style="width: 378px; height: 180px;">
-    <tr style="width: 25%; height:10%"> <td style="width:20%;">  <h1 style="margin-left: 1%;"> Code</h1></td><td style="width: 65%;">   <ngx-barcode [bc-value]="value" [bc-display-value]="true"></ngx-barcode></td></tr>
-    <tr style="width: 25%;"><td style="width: 20%;">  <h2> Nombre </h2>  </td><td style="width: 70%;">  <h2>{{nb}} pièces </h2>  </td></tr>
-      
-  </table>
+          <mat-form-field class="custom-width" style="margin-left: 1%; width: 15%;">
+            <mat-label>Matricule Agent</mat-label>
+            <input matInput placeholder="Agent" formControlName="agent" [matKeyboard]="'de-CH'" (keyup)="set_agent()">
+          </mat-form-field>
+          <img *ngIf="btnlock" style="margin-left: 3%;" src="./../../assets/images/lock.png" width="50px" height="50px"
+            (click)="lock()">
+          <img *ngIf="btnlock==false" style="margin-left: 3%;" src="./../../assets/images/unlock.png" width="50px"
+            height="50px" (click)="lock()">
+
+          <mat-form-field class="custom-width" style="margin-left: 3%; width: 20%;">
+            <mat-label>Code à barres Produit</mat-label>
+            <input matInput placeholder="code" formControlName="code" [matKeyboard]="'de-CH'" (keyup)="g_code()">
+          </mat-form-field>
+
+        </section>
+      </div>
+    </div>
+    <div class="row">
+      <div id="non-printable" class="col-md-8" fxLayout="row wrap">
+        <div class="row" id="non-printable">
+          <div class="card-body col-md-12">
+            <section [formGroup]="form2">
+
+              <mat-form-field style=" width: 22%; margin-left: 2%;">
+                <mat-label> LED</mat-label>
+                <mat-select (selectionChange)="choix_led ($event)" formControlName="led" aria-placeholder=" ">
+                  <mat-option value="125"> 125</mat-option>
+                  <mat-option value="350"> 350 </mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <mat-form-field style=" width: 22%; margin-left: 2%;">
+                <mat-label> KVA </mat-label>
+                <mat-select (selectionChange)="choix_led ($event)" formControlName="k" aria-placeholder=" ">
+                  <mat-option value="125"> 125</mat-option>
+                  <mat-option value="350"> 350 </mat-option>
+                </mat-select>
+              </mat-form-field>.
+
+              <mat-form-field style=" width: 22%; margin-left: 2%;">
+                <mat-label> watts </mat-label>
+                <mat-select (selectionChange)="choix_led ($event)" formControlName="w" aria-placeholder=" ">
+                  <mat-option value="125"> 125</mat-option>
+                  <mat-option value="350"> 350 </mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <mat-form-field style=" width: 22%; margin-left: 2%;">
+                <mat-label> E </mat-label>
+                <mat-select (selectionChange)="choix_led ($event)" formControlName="E" aria-placeholder=" ">
+                  <mat-option value="125"> 125</mat-option>
+                  <mat-option value="350"> 350 </mat-option>
+                </mat-select>
+              </mat-form-field>
+
+
+
+
+            </section>
+          </div>
+          <div class="col-md-5  main-card mb-2 card " style="margin-left: 5%; margin-top: 1%;     ">
+            <div width="100%" style="text-align: center; margin-top: 6%;  ">
+              <img src="./../../assets/images/carton.png" width="250px" height="250px" />
+              <h2>N° Total des Cartons 125</h2>
+            </div>
+          </div>
+          <div class="col-md-5  main-card mb-2 card " style="margin-left: 5%;  margin-top: 1%;     ">
+
+            <div width="100%" style="text-align: center; margin-top: 6%;  ">
+              <img src="./../../assets/images/prdoduit.png" width="250px" height="250px" />
+              <h2>N° Total des Cartons 125</h2>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="col-md-4">
+        <div class="row">
+          <div id="non-printable" class="col-md-12" style="margin-top: -5%;margin-bottom: 5%;">
+            <div width="100%" style="text-align: center; margin-top: 6%;  ">
+              <img src="./../../assets/images/sess-save.png" width="80px" height="80px" />
+              <h2>ali med </h2>
+            </div>
+          </div>
+
+          <div id="printable" class="bc_image col-md-12" style=" width: 378px; height: 180px; ">
+            <h1 style="    position: relative;  margin-left: 75%;   margin-top: -2px;">A60</h1>
+            <!-- <table class="col-md-12" style="margin-top: 3%; width: 378px; height: 180px;">
+              <tr>
+                <th colspan="10"></th>
+                <th style="width: 20px;" >A60</th>
+              </tr>
+               
+              <tr >
+                <th style="height: 20px" colspan="2">  </th> 
+                <th style="width: 20px;" >13W</th>
+                <th style="width: 20px;" >6500k</th>
+               </tr>
+              <tr >
+                <th style="height: 20px" colspan="2"> E27 </th>
+                <th style="height: 20px" colspan="6">  <ngx-barcode [bc-value]="value_code" [bc-display-value]="modecode" [bc-width]="width"
+                  [bc-height]="height"></ngx-barcode> </th>
+                  <th style="height: 20px" colspan="2"> E27 </th>
+              </tr> -->
+              
+
+               
+              <!-- <tr>
+                <td style="width:5%;">
+                  <h1 style="margin-left: 1%;"> </h1>
+
+                </td>
+                <td style="width:20%;">
+                  <h1 style="margin-left: 1%;"> Code </h1>
+                </td>
+                <td style="width:50%;">
+                  <ngx-barcode [bc-value]="value_code" [bc-display-value]="modecode" [bc-width]="width"
+                    [bc-height]="height"></ngx-barcode>
+                </td>
+              </tr> 
+
+
+           </table>-->
+          </div>
+          <div id="non-printable" class="col-md-12" style="margin-top: 5%;">
+            <div class="row col-md-12">
+
+
+              <div class="font-icon-wrapper col-md-3" (click)="code_mode()" ><i class="pe-7s-info"> </i>
+                <p>Code</p>
+              </div>
+              <div class=" col-md-1"></div>
+
+              <div class="font-icon-wrapper col-md-3"><i class="pe-7s-print"  > </i>
+                <p>Imprimer</p>
+              </div>
+
+              <div class=" col-md-1"></div>
+              <div class="font-icon-wrapper col-md-3"><i class="pe-7s-refresh-2"  > </i>
+               
+                <p>Reset</p>
+              </div>
+               
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
-<section [formGroup]="form"  id="non-printable" >
-    
-    <mat-form-field class="custom-width" style="width: 30%;" >
-      <mat-label>Nom</mat-label>
-      <input matInput placeholder="Nom" formControlName="nom"  [matKeyboard]="'de-CH'" (keyup)="filtre()"  > 
-    </mat-form-field>  
-</section >
