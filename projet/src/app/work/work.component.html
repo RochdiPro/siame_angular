@@ -10,8 +10,8 @@
 
           <mat-form-field class="custom-width" style="width: 15%;">
             <mat-label>N° d'ordre de Fabrication</mat-label>
-            <input matInput placeholder="ordre de Fabrication" formControlName="of" [matKeyboard]="'de-CH'"
-              (keyup)="g_of()">
+            <input matInput placeholder="ordre de Fabrication" formControlName="of" [matKeyboard]="'de-CH'">
+             
           </mat-form-field>
 
           <mat-radio-group aria-label="Select an option" style="margin-left: 2%;">
@@ -47,32 +47,32 @@
               <mat-form-field style=" width: 22%; margin-left: 2%;">
                 <mat-label> LED</mat-label>
                 <mat-select (selectionChange)="choix_led ($event)" formControlName="led" aria-placeholder=" ">
-                  <mat-option value="125"> 125</mat-option>
-                  <mat-option value="350"> 350 </mat-option>
+                  <mat-option value="A60"> A 60</mat-option>
+                  <mat-option value="A30"> A 30 </mat-option>
                 </mat-select>
               </mat-form-field>
 
               <mat-form-field style=" width: 22%; margin-left: 2%;">
                 <mat-label> KVA </mat-label>
-                <mat-select (selectionChange)="choix_led ($event)" formControlName="k" aria-placeholder=" ">
-                  <mat-option value="125"> 125</mat-option>
-                  <mat-option value="350"> 350 </mat-option>
+                <mat-select (selectionChange)="choix_kva ($event)" formControlName="k" aria-placeholder=" ">
+                  <mat-option value="2000k"> 2000 k</mat-option>
+                  <mat-option value="6500k"> 6500 k </mat-option>
                 </mat-select>
               </mat-form-field>.
 
               <mat-form-field style=" width: 22%; margin-left: 2%;">
                 <mat-label> watts </mat-label>
-                <mat-select (selectionChange)="choix_led ($event)" formControlName="w" aria-placeholder=" ">
-                  <mat-option value="125"> 125</mat-option>
-                  <mat-option value="350"> 350 </mat-option>
+                <mat-select (selectionChange)="choix_w ($event)" formControlName="w" aria-placeholder=" ">
+                  <mat-option value="13w"> 13 w</mat-option>
+                  <mat-option value="14w"> 14 w </mat-option>
                 </mat-select>
               </mat-form-field>
 
               <mat-form-field style=" width: 22%; margin-left: 2%;">
                 <mat-label> E </mat-label>
-                <mat-select (selectionChange)="choix_led ($event)" formControlName="E" aria-placeholder=" ">
-                  <mat-option value="125"> 125</mat-option>
-                  <mat-option value="350"> 350 </mat-option>
+                <mat-select (selectionChange)="choix_e ($event)" formControlName="E" aria-placeholder=" ">
+                  <mat-option value="E 30"> e 27</mat-option>
+                  <mat-option value="E 40"> e 30 </mat-option>
                 </mat-select>
               </mat-form-field>
 
@@ -84,14 +84,14 @@
           <div class="col-md-5  main-card mb-2 card " style="margin-left: 5%; margin-top: 1%;     ">
             <div width="100%" style="text-align: center; margin-top: 6%;  ">
               <img src="./../../assets/images/carton.png" width="250px" height="250px" />
-              <h2>N° Total des Cartons 125</h2>
+              <h2>N° Total des Cartons 100 : {{nb_carton_100}}</h2>
             </div>
           </div>
           <div class="col-md-5  main-card mb-2 card " style="margin-left: 5%;  margin-top: 1%;     ">
 
             <div width="100%" style="text-align: center; margin-top: 6%;  ">
               <img src="./../../assets/images/prdoduit.png" width="250px" height="250px" />
-              <h2>N° Total des Cartons 125</h2>
+              <h2>N° Total des Cartons 10 : {{nb_carton_10}}</h2>
             </div>
           </div>
         </div>
@@ -107,66 +107,44 @@
           </div>
 
           <div id="printable" class="bc_image col-md-12" style=" width: 378px; height: 180px; ">
-            <h1 style="    position: relative;  margin-left: 75%;   margin-top: -2px;">A60</h1>
-            <!-- <table class="col-md-12" style="margin-top: 3%; width: 378px; height: 180px;">
-              <tr>
-                <th colspan="10"></th>
-                <th style="width: 20px;" >A60</th>
-              </tr>
-               
-              <tr >
-                <th style="height: 20px" colspan="2">  </th> 
-                <th style="width: 20px;" >13W</th>
-                <th style="width: 20px;" >6500k</th>
-               </tr>
-              <tr >
-                <th style="height: 20px" colspan="2"> E27 </th>
-                <th style="height: 20px" colspan="6">  <ngx-barcode [bc-value]="value_code" [bc-display-value]="modecode" [bc-width]="width"
-                  [bc-height]="height"></ngx-barcode> </th>
-                  <th style="height: 20px" colspan="2"> E27 </th>
-              </tr> -->
-              
+            <div
+              style="display: inline ; position: relative;  margin-left: 75%; margin-top: -2px; font-weight: bold; font-size: 18px;">
+              {{val_led}}</div>
+            <br>
+            <br><br>
+            <div
+              style="display: inline ; position: relative;  margin-left: 30%; margin-top: 30px; font-size: 32px; font-weight: bold;">
+              {{val_w}}</div>
+            <div style="display: inline ; position: relative;  margin-left: 10%; margin-top: 30px;  font-size: 22px;">
+              {{val_k}}</div>
+            <br><br><br><br><br><br>
 
-               
-              <!-- <tr>
-                <td style="width:5%;">
-                  <h1 style="margin-left: 1%;"> </h1>
+            <div style="display: inline ; position: relative;  margin-left: 10%; margin-top: 30px; font-weight: bold;">
+              {{val_e}}</div>
+            <ngx-barcode [bc-value]="value_code" [bc-display-value]="modecode" [bc-width]="width" [bc-height]="height"
+              style="display: inline ; position: fixed;  margin-left: 5%; margin-top: -50px;"></ngx-barcode>
+            <div style="display: inline ; position: relative;  margin-left: 20%; margin-top: 50px; font-weight: bold;">
+              Qte : {{nb}}</div>
 
-                </td>
-                <td style="width:20%;">
-                  <h1 style="margin-left: 1%;"> Code </h1>
-                </td>
-                <td style="width:50%;">
-                  <ngx-barcode [bc-value]="value_code" [bc-display-value]="modecode" [bc-width]="width"
-                    [bc-height]="height"></ngx-barcode>
-                </td>
-              </tr> 
-
-
-           </table>-->
           </div>
           <div id="non-printable" class="col-md-12" style="margin-top: 5%;">
             <div class="row col-md-12">
 
 
-              <div class="font-icon-wrapper col-md-3" (click)="code_mode()" ><i class="pe-7s-info"> </i>
+              <div class="font-icon-wrapper col-md-3" (click)="code_mode()"><i class="pe-7s-info"> </i>
                 <p>Code</p>
               </div>
               <div class=" col-md-1"></div>
 
-              <div class="font-icon-wrapper col-md-3"><i class="pe-7s-print"  > </i>
+              <div class="font-icon-wrapper col-md-3"><i class="pe-7s-print"> </i>
                 <p>Imprimer</p>
               </div>
 
               <div class=" col-md-1"></div>
-              <div class="font-icon-wrapper col-md-3"><i class="pe-7s-refresh-2"  > </i>
-               
+              <div class="font-icon-wrapper col-md-3"><i class="pe-7s-refresh-2"> </i>
                 <p>Reset</p>
               </div>
-               
-
             </div>
-
           </div>
         </div>
       </div>

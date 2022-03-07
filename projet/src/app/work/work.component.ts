@@ -8,8 +8,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 })
 export class WorkComponent implements OnInit {
   nb: any = 0;
-  page = 0;
-  size = 15;
+  
   data2: any = []
   data: any = []
   constructor() { }
@@ -25,29 +24,52 @@ export class WorkComponent implements OnInit {
     k: new FormControl(""),
     E: new FormControl(""),
   });
+ 
+ 
 
 
   ngOnInit(): void {
   }
-  value_of: any = "ss"
-  value_code: any = "ss"
+  // traitement sur code a barre 
+   value_code: any = "r"
+   nb_carton_100:any=""
+   nb_carton_10:any=""
   g_code() {
     this.value_code = this.form.get('code')?.value;
     this.nb = Number(this.nb) + 1;
   }
-  g_of() {
-    this.value_of = this.form.get('of')?.value;
-    this.nb = Number(this.nb) + 1;
-  }
+ 
   set_agent()
   {
 
   }
   
+  
   // changer le valeurr de led 
+  val_led:any="" 
   choix_led(ev:any)
   {
+    this.val_led=ev.value;
+  }
+  // changer le valeur de k 
+  val_k:any=""
+  choix_kva(ev:any)
+  {
+    this.val_k=ev.value;
+  }
 
+  // changer le valeur w
+  val_w:any=""
+  choix_w(ev:any)
+  {
+    this.val_w=ev.value;
+  }
+
+  // changer le valeur e
+  val_e:any=""
+  choix_e(ev:any)
+  {
+    this.val_e=ev.value;
   }
 
   // lock et unlock les of et le code agent 
@@ -57,10 +79,18 @@ export class WorkComponent implements OnInit {
     if (this.btnlock) {
       this.form.controls['of'].disable();
       this.form.controls['agent'].disable();
+      this.form2.controls['w'].disable();
+      this.form2.controls['led'].disable();
+      this.form2.controls['k'].disable();
+      this.form2.controls['E'].disable();
 
     } else {
       this.form.controls['of'].enable();
       this.form.controls['agent'].enable();
+      this.form2.controls['w'].enable();
+      this.form2.controls['led'].enable();
+      this.form2.controls['k'].enable();
+      this.form2.controls['E'].enable();
     }
 
   }
@@ -72,13 +102,13 @@ export class WorkComponent implements OnInit {
 
   // changer le mode de ecriture de code a barre 
   modecode:any=false;
+  width  :any= 2;
+  height  :any= 15;
   code_mode() {
-    console.log("dddd")
-     this.modecode=!(this.modecode)
+      this.modecode=!(this.modecode)
   }
 
   
-  width  :any= 2;
-  height  :any= 30;
+
  
 }

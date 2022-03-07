@@ -4,7 +4,7 @@
         #non-printable { display: none; }
         #printable { display: block; }
         body {
-            content:url('./../../assets/images/prdoduit.png');
+            content:url('./../../assets/images/d.svg');
            }
            * {
             -webkit-print-color-adjust: exact;
@@ -13,7 +13,7 @@
 
   
     .bc_image{
-        background-image: url('./../../assets/images/prdoduit.png');
+        background-image: url('./../../assets/images/d.svg');
         background-size: cover;
         background-repeat: no-repeat;
         //height: 100%;

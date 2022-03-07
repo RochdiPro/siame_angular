@@ -32,12 +32,14 @@ import { WorkComponent } from './work/work.component';
  import {MatCheckboxModule} from '@angular/material/checkbox';
 import { ConfigComponent } from './config/config.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { MenuComponent } from './menu/menu.component';
  
 @NgModule({
   declarations: [
     AppComponent,
     WorkComponent,
     ConfigComponent,
+    MenuComponent,
    ],
   imports: [
     FlexLayoutModule,
