@@ -41,69 +41,36 @@ export class ConnexionComponent implements OnInit {
   pdfObj: any;
   res: any; 
   connexion() {
-    this.cercle = true;
+    
 
-    if (this.cnx.get("id")?.value == "infonet_admin") {
-      this.infonet.role = "admin";
-      this.infonet.nom = "admin";
-      localStorage.setItem('User', JSON.stringify(this.infonet));
-      localStorage.setItem('session', JSON.stringify(this.infonet));
-      this.router.navigate(['/menu/accueil']);
-      this.connecter = true;
-
+    if (this.cnx.get("id")?.value == "admin" && this.cnx.get("pwd")?.value == "admin") { 
+      this.router.navigate(['/config']);
+ 
+    }else
+    if (this.cnx.get("id")?.value == "agent" && this.cnx.get("pwd")?.value == "agent") { 
+      this.router.navigate(['/work']);
+ 
+    }
+    else 
+    {
+      Swal.fire({
+        title: 'Erreur ',
+        text: 'Vérifier vos données  ',
+        icon: 'warning',
+        confirmButtonText: 'ok',
+      })
     }
    
 
-    setTimeout(() => {
-      if (this.connecter == false) {
-        Swal.fire({
-          icon: 'error',
-          title: " échec de connexion",
-          text: 'veuillez vérifier la connexion',
-        })
-      }
-      this.cercle = false;
-
-    },
-      5000);
+     
   }
 
   ngOnInit(): void {
   }
 
-
-   pdf()
-   {
-
-   }
+ 
    
-  
-   write(){
-    const writeSecretFile = async () => {
-      await Filesystem.writeFile({
-        path: 'secrets/text.txt',
-        data: "This is a test",
-        directory: Directory.Documents,
-        encoding: Encoding.UTF8,
-      });
-    };
-    Swal.fire({
-      icon: 'error',
-      title: "   ",
-      text: 'wrie'+writeSecretFile,
-    })
-}
-  read(){
-    const readSecretFile = async () => {
-      const contents = await Filesystem.readFile({
-        path: 'secrets/text.txt',
-        directory: Directory.Documents,
-        encoding: Encoding.UTF8,
-      });
-    
-      console.log('secrets:', contents);
-    };
-}
+ 
   
 
 }

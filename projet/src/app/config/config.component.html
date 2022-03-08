@@ -11,52 +11,66 @@
 
     <div width="100%" style="text-align: center; margin-top: 6%;  ">
       <img src="./../../assets/images/ordre.jpg" width="200px" height="150px" />
+      </div>
+      <button type="button" class="btn btn-success" (click) ="ajouter()">Ajouter</button>
+
       <table class="table table-striped ">
         <thead>
           <tr>
-            <th>N° Ordre</th>
-            <th>Code Ordre</th>
+            <th>Code emballage</th>
+            <th>Code Article OF</th>
+            <th>E/100</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let obj of liste_of;let index = index;">
+          <tr *ngFor="let obj of liste_of ">
             <td>
-              {{index}}
+              {{obj.code_produit}}
             </td>
             <td>
-              {{obj.code}}
+              {{obj.code_of}}
             </td>
-
+            <td>
+              {{obj.e100}}
+            </td>
           </tr>
         </tbody>
 
 
       </table>
-    </div>
+     
   </div>
-  <div class="col-md-4  main-card mb-2 card " style="margin-left: 2%; margin-top: 1%;     ">
+  <div class="col-md-5  main-card mb-2 card " style="margin-left: 2%; margin-top: 1%;     ">
     <input type="file" (change)="readproduit($event )"> 
     <div width="100%" style="text-align: center; margin-top: 6%;  ">
       <img src="./../../assets/images/images.png" width="200px" height="150px" />
     </div>
     <table class="table table-striped ">
       <thead>
-        <tr>
-          <th>N°</th>
-          <th>Code Article</th>
-          <th>Désignation</th>
+        <tr> 
+          <th>Code article OF</th>
+          <th>Gamme</th>
+          <th>Culot</th>
+          <th>Puissance</th>
+          <th>couleur</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let obj of liste_produit;let index = index;">
-          <td>
-            {{index}}
-          </td>
+        <tr *ngFor="let obj of liste_produit">
           <td>
             {{obj.code}}
           </td>
           <td>
-            {{obj.des}}
+            {{obj.gamme}}
+          </td>
+          <td>
+            {{obj.culot}}
+          </td>
+          <td>
+            {{obj.puissance}}
+          </td>
+          <td>
+            {{obj.couleur}}
           </td>
 
         </tr>
@@ -65,7 +79,7 @@
 
     </table>
   </div>
-  <div class="col-md-4 main-card mb-2 card " style="margin-left: 2%;  margin-top: 1%;     ">
+  <div class="col-md-3 main-card mb-2 card " style="margin-left: 2%;  margin-top: 1%;     ">
     <input type="file" (change)="readagent($event )">
 
     <div width="100%" style="text-align: center; margin-top: 6%;  ">
@@ -74,20 +88,16 @@
     </div>
     <table class="table table-striped ">
       <thead>
-        <tr>
+        <tr> 
+          <th>Matricule agent</th> 
           <th>Nom & Prenom</th>
-          <th>code</th>
-          <th>mot de passe</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let obj of liste_agent;let index = index;">
           <td>
-            {{obj.code}}
-          </td>
-          <td>
-            {{obj.mot_de_passe}}
-          </td>
+            {{obj.matricule}}
+          </td> 
           <td>
             {{obj.nom}}
           </td>
