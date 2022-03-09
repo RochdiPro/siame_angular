@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { MatInputModule } from 'mat-input';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -20,6 +21,9 @@ export class WorkComponent implements OnInit {
   val_w: any = "" 
   val_e: any = ""
   src_img:any="./../../assets/images/"+this.val_led+".png"
+   
+  @ViewChild('ref_of', { static: false }) ref_of :any= MatInputModule;
+  @ViewChild('ref_agent', { static: false }) ref_agent :any= MatInputModule;
 
   constructor() {
     this.liste_produit = JSON.parse(localStorage.getItem('liste_produit') + "");
@@ -53,6 +57,13 @@ export class WorkComponent implements OnInit {
         if (this.liste_of[i].code_of == v) {
           this.test_of = true;
           this.index_ordre_fabrication = i;
+          Swal.fire({ 
+            icon: 'success',
+            title: 'Ordre de fabrication',
+            showConfirmButton: false,
+            timer: 1000
+          })
+          this.ref_agent.nativeElement.focus();  
         }
       }
 
@@ -69,9 +80,8 @@ export class WorkComponent implements OnInit {
           if (this.liste_produit[i].code == this.liste_of[this.index_ordre_fabrication].code_produit) {
             this.test_code_produit = true
               let c = this.liste_produit[i].code 
-              this.value_code = c;
-
-             this.val_e = this.liste_produit[i].couleur             
+              this.value_code = c; 
+             this.val_e = this.liste_produit[i].culot             
              this.val_led = this.liste_produit[i].gamme.trim() 
               this.val_w = this.liste_produit[i].puissance 
               this.val_k=this.liste_produit[i].couleur 
@@ -84,7 +94,7 @@ export class WorkComponent implements OnInit {
   ngOnInit(): void {
   }
   // traitement sur code a barre 
-  value_code: any = ""
+  value_code: any = "6191534200081"
   nb_carton_100: any = ""
   nb_carton_10: any = ""
   test_code: any = false;
@@ -155,6 +165,7 @@ export class WorkComponent implements OnInit {
 
   // traitement sur agent 
   test_agent: any = false;
+  nom_agent:any=""
   set_agent(event: any) {
 
     if (event.key == "Enter") {
@@ -162,8 +173,17 @@ export class WorkComponent implements OnInit {
       this.test_agent = false
       for (let i = 0; i < this.liste_agent.length; i++) {
         if (this.liste_agent[i].matricule == v) {
+          this.nom_agent
           this.test_agent = true;
-        }
+          this.nom_agent=this.liste_agent[i].nom
+          this.lock();
+          Swal.fire({ 
+            icon: 'success',
+            title: 'agent',
+            showConfirmButton: false,
+            timer: 1000
+          })
+         }
       }
       if (this.test_agent == false) {
         this.form.controls["agent"].setValue("");
@@ -212,8 +232,9 @@ export class WorkComponent implements OnInit {
 
   // changer le mode de code a barre 
  
-  width: any = 1;
-  height: any = 50;  
+  width: any = 2;
+  height: any = 35; 
+  width_qr : any = 90 ; 
   imprimer()
   {
      window.print()

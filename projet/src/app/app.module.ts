@@ -21,7 +21,8 @@ import { FilePath } from '@awesome-cordova-plugins/file-path/ngx';
 import { WorkComponent } from './work/work.component';
   
  import { NgxBarcodeModule } from 'ngx-barcode';
- 
+ import { NgxQRCodeModule } from 'ngx-qrcode2';
+
  import { FormsModule, ReactiveFormsModule } from '@angular/forms';
  import { MatInputModule } from '@angular/material/input';
   import { MatPaginatorModule } from '@angular/material/paginator';
@@ -33,7 +34,7 @@ import { WorkComponent } from './work/work.component';
 import { ConfigComponent } from './config/config.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MenuComponent } from './menu/menu.component';
- 
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -66,7 +67,7 @@ import { MenuComponent } from './menu/menu.component';
     MatTableModule,
     MatSortModule,
     MatProgressBarModule,
-    
+    NgxQRCodeModule
   ],
   providers: [DatePipe , MatDatepickerModule,Printer,DocumentViewer,FileOpener  ,File , FilePath],
   bootstrap: [AppComponent]
