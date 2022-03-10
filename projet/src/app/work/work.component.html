@@ -83,10 +83,10 @@
             </div>
           </div>
 
-          <div id="printable" class="bc_image col-md-12" style=" width: 480px; height: 300px;   ">
+          <div id="printable" class="bc_image col-md-12"  >
 
-            <svg width="500px" height="190px" viewBox="0 0 1000 300">
-              <text x="260" y="50" font-family="Verdana" font-size="45" font-weight="bold">
+            <svg width="400px" height="170px" viewBox="0 0 1000 300">
+              <text x="260" y="30" font-family="Verdana" font-size="45" font-weight="bold">
                 Lampe LED : {{val_led}}
               </text>
               <image [attr.xlink:href]="src_img" x="0" y="90" height="180px" width="250px" /> 
@@ -103,8 +103,7 @@
                 <text x="80" y="330" font-family="Verdana" font-size="40" font-weight="bold">
                   E{{val_e}} 
                 </text>
-              </g>
-
+              </g> 
             </svg>
             <div class="row"> 
                 <ngx-qrcode [value]="info" [width]="width_qr" style="display: inline; margin-left: 6%; "></ngx-qrcode>

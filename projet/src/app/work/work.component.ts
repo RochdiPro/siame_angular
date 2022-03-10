@@ -17,7 +17,7 @@ export class WorkComponent implements OnInit {
   nb_print_carton_100: any = 0;
   nb_carton_10_controle_100: any = 0;
   info: any = "gg";
-  value_code: any = "dddddddddddd"
+  value_code: any = "6193101805040"
   data2: any = []
   data: any = []
   liste_produit: any = [];
@@ -302,8 +302,8 @@ export class WorkComponent implements OnInit {
 
   // Parametre de code a barre  
   width: any = 2;
-  height: any = 35;
-  width_qr: any = 90;
+  height: any = 25;
+  width_qr: any = 80;
   imprimer() {
     window.print()
   }
