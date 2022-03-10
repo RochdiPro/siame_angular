@@ -34,7 +34,7 @@ import { WorkComponent } from './work/work.component';
 import { ConfigComponent } from './config/config.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MenuComponent } from './menu/menu.component';
-
+ 
 @NgModule({
   declarations: [
     AppComponent,

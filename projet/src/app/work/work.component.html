@@ -11,14 +11,15 @@
           <mat-form-field class="custom-width" style="width: 25%;">
             <mat-label>N° d'ordre de Fabrication</mat-label>
             <input matInput placeholder="ordre de Fabrication" [(ngModel)]="form.of" formControlName="of" #ref_of
-              (keypress)="set_of($event)">
+              (keypress)="set_of($event)"> 
           </mat-form-field>
-
+          <img src="./../../assets/images/trash-bin.png" (click)="sup_of()" width="20px" height="20px">
           <mat-form-field class="custom-width" style="margin-left: 5%; width: 25%;">
             <mat-label>Matricule Agent</mat-label>
             <input matInput placeholder="Agent" [(ngModel)]="form.agent" formControlName="agent" #ref_agent
               (keypress)="set_agent($event)">
           </mat-form-field>
+          <img src="./../../assets/images/trash-bin.png" (click)="sup_agent()" width="20px" height="20px">
 
           <img *ngIf="btnlock" style="margin-left: 3%;" src="./../../assets/images/lock.png" width="50px" height="50px"
             (click)="lock()">
@@ -35,110 +36,84 @@
       </div>
     </div>
     <div class="row">
-      <div id="non-printable" class="col-md-7" fxLayout="row wrap">
+      <div id="non-printable" class="col-md-6" fxLayout="row wrap">
         <div class="row col-md-12" id="non-printable">
 
-          <div class="col-md-5  main-card mb-2 card " style="margin-left: 5%; margin-top: 0%;     ">
+          <div class="col-md-6  main-card mb-2 card " style="margin-left: 1%; margin-top: 0%;     ">
             <div width="100%" style="text-align: center; margin-top: 6%;  ">
-              <img src="./../../assets/images/carton.png" width="200px" height="150px" />
-              <h2>N° des Emballages 100 : {{nb_carton_100}}</h2>
+              <img src="./../../assets/images/carton.png" width="160px" height="120px" />
+              <h3>N° Emballages 100 : {{nb_print_carton_100}}</h3>
             </div>
             <div width="100%" style="text-align: center; margin-top: 6%;  ">
-              <img src="./../../assets/images/prdoduit.png" width="200px" height="150px" />
-              <h2>N° des Emballages 10 : {{nb_carton_10}}</h2>
+              <img src="./../../assets/images/prdoduit.png" width="160px" height="120px" />
+              <h3>N° Emballages 10 : {{nb_print_carton_10}}</h3>
             </div>
           </div>
-          <div class="col-md-5  main-card mb-2 card " style="margin-left: 5%;  margin-top: 1%;     ">
-
-            <div width="100%" style="text-align: center; margin-top: 6%; margin-bottom: 30%; ">
-
-              <img src='{{ "./../../assets/images/" + val_led + ".png" }}' width="100px" height="100px" />
-              <h1>{{nb}}</h1>
+          <div class="col-md-5  main-card mb-2 card " style="margin-left: 2%;  margin-top: 1%;     ">
+            <div width="100%" style="text-align: center; margin-top: 6%; margin-bottom: 10%; ">
+              <img src='{{ "./../../assets/images/" + val_led + ".png" }}' width="70px" height="70px" />
+              <h1 style="color: red;">{{nb}}</h1>
             </div>
-            <h2> Gamme : {{val_led }} </h2>
-            <h2> Culot : {{ val_e}} </h2>
-            <h2> Puissance : {{val_w}}</h2>
-            <h2> couleur : {{val_k}} </h2>
+            <h3> Gamme : {{val_led }} </h3>
+            <h3> Culot : {{ val_e}} </h3>
+            <h3> Puissance : {{val_w}}</h3>
+            <h3> couleur : {{val_k}} </h3>
+            <div class="row ">
+               
+              <div class="font-icon-wrapper col-md-5" (click)="imprimer()"><i class="pe-7s-print"> </i>
+                <p>Imprimer</p>
+              </div>
+              <div class="font-icon-wrapper col-md-2"  >  
+              </div> 
+              <div class="font-icon-wrapper col-md-5" (click)="reset()"><i class="pe-7s-refresh-2"> </i>
+                <p>Reset</p>
+              </div>
+            </div>
           </div>
         </div>
+        
 
       </div>
-      <div class="col-md-4">
+      <div class="col-md-6">
         <div class="row">
           <div id="non-printable" class="col-md-12" style="margin-top: -5%;margin-bottom: 5%;">
-            <div width="100%" style="text-align: center; margin-top: 6%;  ">
-              <img src="./../../assets/images/sess-save.png" width="80px" height="80px" />
+            <div width="100%" style="text-align: center; margin-top: 1%;  ">
+              <img src="./../../assets/images/sess-save.png" width="50px" height="50px" />
               <h2>{{nom_agent}} </h2>
             </div>
           </div>
 
           <div id="printable" class="bc_image col-md-12" style=" width: 480px; height: 300px;   ">
 
-            <svg width="400px" height="210px" viewBox="0 0 1000 300">
-              <text x="350" y="20" font-family="Verdana" font-size="60" font-weight="bold">
+            <svg width="500px" height="190px" viewBox="0 0 1000 300">
+              <text x="260" y="50" font-family="Verdana" font-size="45" font-weight="bold">
                 Lampe LED : {{val_led}}
               </text>
-              <image xlink:href="./../../assets/images/A60.svg" x="0" y="20" height="300px" width="300px" /> 
+              <image [attr.xlink:href]="src_img" x="0" y="90" height="180px" width="250px" /> 
               <g>
-                <rect x="300" y="120" width="300" height="210" stroke="black" fill="transparent" stroke-width="5">
+                <rect x="260" y="90" width="280" height="200" stroke="black" fill="transparent" stroke-width="4">
                 </rect>
-                <text x="330" y="240" font-family="Verdana" font-size="70" font-weight="bold">{{val_w}}</text>
+                <text x="280" y="200" font-family="Verdana" font-size="50" font-weight="bold">{{val_w}}W</text>
               </g>
               <g>
-                <rect x="620" y="140" width="270" height="170" stroke="black" fill="transparent" stroke-width="2">
+                <rect x="560" y="120" width="290" height="140" stroke="black" fill="transparent" stroke-width="2">
                 </rect>
-                <text x="640" y="240" font-family="Verdana" font-size="60"  >{{val_k}}</text>
-                <text x="700" y="400" font-family="Verdana" font-size="40">Qte : {{nb}}</text>
-                <text x="100" y="400" font-family="Verdana" font-size="50" font-weight="bold">
-                  {{val_e}} 
+                <text x="580" y="200" font-family="Verdana" font-size="50"  >{{val_k}}K</text>
+                <text x="580" y="320" font-family="Verdana" font-size="30">Qte : {{nb+1}}</text>
+                <text x="80" y="330" font-family="Verdana" font-size="40" font-weight="bold">
+                  E{{val_e}} 
                 </text>
               </g>
 
             </svg>
-            <div class="row">
-              
-                <ngx-qrcode [value]="value_code" [width]="width_qr" style="display: inline; margin-left: 6%; "></ngx-qrcode>
-               
-
+            <div class="row"> 
+                <ngx-qrcode [value]="info" [width]="width_qr" style="display: inline; margin-left: 6%; "></ngx-qrcode>
                 <ngx-barcode [bc-value]="value_code" [bc-display-value]="true" [bc-width]="width" [bc-height]="height"
-                  style="display: inline; margin-left: 0%;"></ngx-barcode>
-
-             
-            </div>
-            <!-- <div
-              style="display: inline ; position: fixed;  margin-left: 45%; margin-top: 15px; font-weight: bold; font-size: 18px;">
-              Lampe LED : {{val_led}}</div>
-            <br>
-            <br><br>
-            <div
-              style="display: inline ; position: fixed;  margin-left: 35%; margin-top: 24px; font-size: 32px; font-weight: bold;">
-              {{val_w}}</div>
-            <div style="display: inline ; position: fixed;  margin-left: 70%; margin-top: 20px;  font-size: 22px;">
-              {{val_k}}</div>
-            <br><br><br><br><br><br>
-
-            <div style="display: inline ; position: fixed;  margin-left: 7%; margin-top: -10px; font-weight: bold;">
-              {{val_e}}</div>
-            <ngx-barcode [bc-value]="value_code" [bc-display-value]="true" [bc-width]="width" [bc-height]="height"
-              style="display: inline ; position: fixed;  margin-left: 30%; margin-top: -30px;"></ngx-barcode>
-            <div style="display: inline ; position: fixed;  margin-left: 70%; margin-top: -50px; font-weight: bold;">
-              Qte : {{nb}}</div> -->
+                  style="display: inline; margin-left: 0%;"></ngx-barcode> 
+            </div> 
 
           </div>
-          <div id="non-printable" class="col-md-12" style="margin-top: 5%;">
-            <div class="row col-md-12">
-              <div class=" col-md-1"></div>
-
-              <div class="font-icon-wrapper col-md-4" (click)="imprimer()"><i class="pe-7s-print"> </i>
-                <p>Imprimer</p>
-              </div>
-
-              <div class=" col-md-1"></div>
-              <div class="font-icon-wrapper col-md-4" (click)="reset()"><i class="pe-7s-refresh-2"> </i>
-                <p>Reset</p>
-              </div>
-            </div>
-          </div>
+        
         </div>
       </div>
     </div>
