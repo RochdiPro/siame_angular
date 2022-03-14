@@ -11,7 +11,7 @@
           <mat-form-field class="custom-width" style="width: 25%;">
             <mat-label>N° d'ordre de Fabrication</mat-label>
             <input matInput placeholder="ordre de Fabrication" [(ngModel)]="form.of" formControlName="of" #ref_of
-              (keypress)="set_of($event)"> 
+              (keypress)="set_of($event)">
           </mat-form-field>
           <img src="./../../assets/images/trash-bin.png" (click)="sup_of()" width="20px" height="20px">
           <mat-form-field class="custom-width" style="margin-left: 5%; width: 25%;">
@@ -31,6 +31,7 @@
             <input matInput placeholder="code" [(ngModel)]="form.code" formControlName="code"
               (keypress)="g_code($event)">
           </mat-form-field>
+          <img src="./../../assets/images/trash-bin.png" (click)="sup_code()" width="20px" height="20px">
 
         </section>
       </div>
@@ -59,19 +60,19 @@
             <h3> Puissance : {{val_w}}</h3>
             <h3> couleur : {{val_k}} </h3>
             <div class="row ">
-               
+
               <div class="font-icon-wrapper col-md-5" (click)="imprimer()"><i class="pe-7s-print"> </i>
                 <p>Imprimer</p>
               </div>
-              <div class="font-icon-wrapper col-md-2"  >  
-              </div> 
+              <div class="font-icon-wrapper col-md-2">
+              </div>
               <div class="font-icon-wrapper col-md-5" (click)="reset()"><i class="pe-7s-refresh-2"> </i>
                 <p>Reset</p>
               </div>
             </div>
           </div>
         </div>
-        
+
 
       </div>
       <div class="col-md-6">
@@ -83,36 +84,44 @@
             </div>
           </div>
 
-          <div id="printable" class="bc_image col-md-12"  >
-
-            <svg width="400px" height="170px" viewBox="0 0 1000 300">
-              <text x="260" y="30" font-family="Verdana" font-size="45" font-weight="bold">
-                Lampe LED : {{val_led}}
-              </text>
-              <image [attr.xlink:href]="src_img" x="0" y="90" height="180px" width="250px" /> 
-              <g>
-                <rect x="260" y="90" width="280" height="200" stroke="black" fill="transparent" stroke-width="4">
-                </rect>
-                <text x="280" y="200" font-family="Verdana" font-size="50" font-weight="bold">{{val_w}}W</text>
-              </g>
-              <g>
-                <rect x="560" y="120" width="290" height="140" stroke="black" fill="transparent" stroke-width="2">
-                </rect>
-                <text x="580" y="200" font-family="Verdana" font-size="50"  >{{val_k}}K</text>
-                <text x="580" y="320" font-family="Verdana" font-size="30">Qte : {{nb+1}}</text>
-                <text x="80" y="330" font-family="Verdana" font-size="40" font-weight="bold">
-                  E{{val_e}} 
-                </text>
-              </g> 
-            </svg>
-            <div class="row"> 
-                <ngx-qrcode [value]="info" [width]="width_qr" style="display: inline; margin-left: 6%; "></ngx-qrcode>
+          <div id="printable" class=" row bc_image col-md-12">
+               
+              
+              <svg width="400px" height="170px" viewBox="0 0 1000 300">
+        
+                 <text x="380" y="20" font-family="Verdana" font-size="35" font-weight="bold">
+                      Lampe LED : {{val_led}}  
+                    </text>  
+                 <image [attr.xlink:href]="src_img" x="10" y="130" height="180px" width="250px" />
+                <g>
+                  <rect x="260" y="100" width="300" height="220" stroke="black" fill="transparent" stroke-width="4">
+                  </rect>
+                  <text x="300" y="230" font-family="Verdana" font-size="50" font-weight="bold">{{val_w}}W</text>
+                </g>
+                <g>
+                  <rect x="600" y="130" width="290" height="120" stroke="black" fill="transparent" stroke-width="2">
+                  </rect>
+                  <text x="630" y="210" font-family="Verdana" font-size="50">{{val_k}}K</text>
+                  <text x="600" y="320" font-family="Verdana" font-size="30">Qte : {{nb}}</text>
+                  <text x="98" y="360" font-family="Verdana" font-size="30" font-weight="bold"> {{val_e}}   </text>
+                </g>  
+              </svg>
+              <div class="row"> 
+                <ngx-qrcode [value]="info" [width]="width_qr" style="display: inline; margin-left: 9%; margin-top: -165px;"></ngx-qrcode>
                 <ngx-barcode [bc-value]="value_code" [bc-display-value]="true" [bc-width]="width" [bc-height]="height"
-                  style="display: inline; margin-left: 0%;"></ngx-barcode> 
+                  style="display: inline; margin-left: 15%;"></ngx-barcode> 
             </div> 
+              
+            
+              
+
+          
+          
+              
+           
 
           </div>
-        
+
         </div>
       </div>
     </div>

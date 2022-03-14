@@ -41,11 +41,12 @@ import { MenuComponent } from './menu/menu.component';
     WorkComponent,
     ConfigComponent,
     MenuComponent,
+     
    ],
   imports: [
     FlexLayoutModule,
     BrowserModule,
-    AppRoutingModule,
+     AppRoutingModule,
     BrowserAnimationsModule,
     HttpClientModule,
     FormsModule,

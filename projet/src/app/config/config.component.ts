@@ -36,7 +36,7 @@ export class ConfigComponent implements OnInit {
         let t2 = t[i].split(",");
         this.obj = {}
         this.obj.code_of = t2[0]
-        this.obj.code_produit = t2[1]
+        this.obj.code_fl = t2[1]
         this.obj.e100 =  t2[2]
 
         if (this.obj.code != undefined || this.obj.code != " " || this.obj.code != "") {
@@ -62,11 +62,12 @@ export class ConfigComponent implements OnInit {
       for (let i = 1; i < t.length; i++) {
         let t2 = t[i].split(",");
         this.obj = {}
-        this.obj.code = t2[0]
-        this.obj.gamme = t2[1]
-        this.obj.culot = t2[2]
+        this.obj.codefl = t2[0]
+        this.obj.code = t2[1]
+        this.obj.gamme = t2[2]
+        this.obj.culot = t2[4]
         this.obj.puissance = t2[3]
-        this.obj.couleur = t2[4]
+        this.obj.couleur = t2[5]
         if (this.obj.code != undefined  || this.obj.code != " " || this.obj.code != "")  {
           this.liste_produit.push(this.obj)
         }
@@ -111,7 +112,7 @@ export class ConfigComponent implements OnInit {
       html:
         '<table>' +
         '<tr><td>Code OF</td><td> <input id="swal-input1" value="" class="swal2-input"  placeholder="OF" ></td></tr>' +
-        '<tr><td>Code Article</td><td><input id="swal-input2" value="" class="swal2-input"  placeholder="619.." >  </td></tr>' +
+        '<tr><td>Code FL</td><td><input id="swal-input2" value="" class="swal2-input"  placeholder="619.." >  </td></tr>' +
         '<tr><td> E 100 </td><td><input id="swal-input3" value="oui" class="swal3-input"  placeholder="oui" >  </td></tr>' +
 
         '</table>',
@@ -137,9 +138,9 @@ export class ConfigComponent implements OnInit {
           })
         }
         else { 
-          this.obj = {}
+          this.obj = {} 
           this.obj.code_of = this.a[0]
-          this.obj.code_produit = this.a[1] 
+          this.obj.code_fl = this.a[1] 
           this.obj.e100 = this.a[2] 
           this.liste_of.push(this.obj)
           localStorage.setItem('liste_of', JSON.stringify(this.liste_of));

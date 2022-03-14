@@ -16,14 +16,14 @@ export class WorkComponent implements OnInit {
   nb_print_carton_10: any = 0;
   nb_print_carton_100: any = 0;
   nb_carton_10_controle_100: any = 0;
-  info: any = "gg";
-  value_code: any = "6193101805040"
+  info: any = "";
+  value_code: any = ""
   data2: any = []
   data: any = []
   liste_produit: any = [];
   liste_agent: any = [];
   liste_of: any = [];
-  val_led: any = "A60"
+  val_led: any = ""
   val_k: any = ""
   val_w: any = ""
   val_e: any = ""
@@ -38,6 +38,14 @@ export class WorkComponent implements OnInit {
     this.liste_of = JSON.parse(localStorage.getItem('liste_of') + "");
     this.form.controls['code'].disable();
     this.historique_of = JSON.parse(localStorage.getItem('historique_of') + "");
+
+    if (this.liste_agent == undefined || this.liste_of == undefined || this.liste_produit == undefined) {
+      Swal.fire({
+        icon: 'error',
+        title: '',
+        text: 'data ',
+      })
+    }
 
   }
   form: any = new FormGroup({
@@ -65,7 +73,7 @@ export class WorkComponent implements OnInit {
       this.nb_carton_10 = 0
       this.nb_carton_100 = 0
       this.nb_carton_10_controle_100 = 0
-      this.nb_print_carton_10 = 0  
+      this.nb_print_carton_10 = 0
       this.nb_print_carton_100 = 0
       for (let i = 0; i < this.liste_of.length; i++) {
         if (this.liste_of[i].code_of == v) {
@@ -78,8 +86,8 @@ export class WorkComponent implements OnInit {
             showConfirmButton: false,
             timer: 1000
           })
-         
-          this.ref_agent.nativeElement.focus();
+
+          //this.ref_agent.nativeElement.focus();
         }
       }
 
@@ -104,12 +112,12 @@ export class WorkComponent implements OnInit {
             this.nb_carton_10 = this.historique_of[i].nb_carton_10;
             this.nb_carton_100 = this.historique_of[i].nb_carton_100;
             this.nb_carton_10_controle_100 = this.historique_of[i].nb_carton_10_controle_100
-            this.nb_print_carton_10 = this.historique_of[i].nb_print_carton_10   
-            this.nb_print_carton_100 = this.historique_of[i].nb_print_carton_100   
-           }
+            this.nb_print_carton_10 = this.historique_of[i].nb_print_carton_10
+            this.nb_print_carton_100 = this.historique_of[i].nb_print_carton_100
+          }
         }
         console.log(this.test_of)
-         if (test_historique_of == false) {
+        if (test_historique_of == false) {
           this.obj = {}
           this.obj.of = v;
           this.obj.nb = this.nb;
@@ -119,15 +127,15 @@ export class WorkComponent implements OnInit {
           this.obj.nb_print_carton_10 = this.nb_print_carton_10
           this.obj.nb_print_carton_100 = this.nb_print_carton_100
           this.historique_of.push(this.obj)
-         }
-         console.log(this.historique_of)
-         localStorage.setItem('historique_of', JSON.stringify(this.historique_of)); 
+        }
+        console.log(this.historique_of)
+        localStorage.setItem('historique_of', JSON.stringify(this.historique_of));
 
         for (let i = 0; i < this.liste_produit.length; i++) {
-          if (this.liste_produit[i].code == this.liste_of[this.index_ordre_fabrication].code_produit) {
+          if (this.liste_produit[i].codefl == this.liste_of[this.index_ordre_fabrication].code_fl) {
             this.test_code_produit = true
-            let c = this.liste_produit[i].code
-            this.value_code = c;
+            let c = this.liste_produit[i].codefl
+            this.value_code = c;   
             this.val_e = this.liste_produit[i].culot
             this.val_led = this.liste_produit[i].gamme.trim()
             this.val_w = this.liste_produit[i].puissance
@@ -143,7 +151,7 @@ export class WorkComponent implements OnInit {
   ngOnInit(): void {
   }
   // traitement sur code a barre 
- 
+
   nb_carton_100: any = ""
   nb_carton_10: any = ""
   test_code: any = false;
@@ -154,21 +162,26 @@ export class WorkComponent implements OnInit {
       let v = this.form.get('code')?.value
       this.test_code = false
       this.test_code_produit = false
+      let codefl=""
+      // chercher produit et get code fl 
       for (let i = 0; i < this.liste_produit.length; i++) {
         if (this.liste_produit[i].code == v) {
           this.test_code_produit = true
           this.index_code_produit = i;
+          codefl=this.liste_produit[i].codefl
         }
       }
-
+      // get true false if code fl ==  code empallage
       for (let i = 0; i < this.liste_of.length; i++) {
-        if (this.liste_of[i].code_produit == v) {
+        if (this.liste_of[i].code_fl == codefl) {
           if (this.liste_of[i].code_of == this.form.get('of')?.value) {
             this.test_code = true;
             this.form.controls["code"].setValue("");
           }
         }
       }
+
+      // message produit inconu 
       if (this.test_code_produit == false) {
         this.form.controls["code"].setValue("");
         Swal.fire({
@@ -177,6 +190,7 @@ export class WorkComponent implements OnInit {
           text: "Produit Inconnu ",
         })
       } else {
+        // message erreur code produit et code fl et code of
         if (this.test_code == false) {
           this.form.controls["code"].setValue("");
           Swal.fire({
@@ -191,14 +205,15 @@ export class WorkComponent implements OnInit {
         this.value_code = this.form.get('code')?.value;
         this.nb = Number(this.nb) + 1;
         if ((Number(this.nb) % 10) == 0) {
-          window.print()
+          await this.delai(200);
+          this.imprimer()
           this.nb = 0;
           this.nb_carton_10 = 0
           this.nb_carton_10_controle_100 = Number(this.nb_carton_10_controle_100) + 1
           this.nb_print_carton_10 = Number(this.nb_print_carton_10) + 1
         }
         if ((this.nb_carton_10_controle_100 != 0) && (Number(this.nb_carton_10_controle_100) % 10) == 0) {
-          this.nb = 99
+          this.nb = 100
           await this.delai(3000);
           window.print()
           this.nb = 0;
@@ -217,19 +232,18 @@ export class WorkComponent implements OnInit {
 
   // Enregistrer les données de of pour la prochaine étape 
   save_data_of() {
-    let i =-1;
+    let i = -1;
     for (let j = 0; j < this.historique_of.length; j++) {
-      if (this.historique_of[j].of== this.form.get('of')?.value) { 
-        i=j;
+      if (this.historique_of[j].of == this.form.get('of')?.value) {
+        i = j;
         console.log(i)
       }
     }
-    if(i >-1)
-    {
+    if (i > -1) {
       this.historique_of[i].nb = this.nb;
       this.historique_of[i].nb_carton_10 = this.nb_carton_10;
       this.historique_of[i].nb_carton_100 = this.nb_carton_100;
-      this.historique_of[i].nb_carton_10_controle_100 = this.nb_carton_10_controle_100; 
+      this.historique_of[i].nb_carton_10_controle_100 = this.nb_carton_10_controle_100;
       this.historique_of[i].nb_print_carton_10 = this.nb_print_carton_10
       this.historique_of[i].nb_print_carton_100 = this.nb_print_carton_100
       localStorage.setItem('historique_of', JSON.stringify(this.historique_of));
@@ -302,11 +316,28 @@ export class WorkComponent implements OnInit {
 
   // Parametre de code a barre  
   width: any = 2;
-  height: any = 25;
-  width_qr: any = 80;
+  height: any = 21;
+  width_qr: any = 70;
   imprimer() {
-    window.print()
+    if (this.nb == 10 ) {
+      this.nb = Number(this.nb)
+      console.log(this.nb)
+      window.print()
+      this.nb= 0
+    }
+    else if (this.nb > 0 ) {
+      window.print()
+    }
+    else {
+      Swal.fire({
+        icon: 'error',
+        title: '',
+        text: '  ',
+      })
+    }
   }
+
+
 
   reset() {
     Swal.fire({
@@ -330,8 +361,8 @@ export class WorkComponent implements OnInit {
         this.nb_carton_10 = 0
         this.nb_carton_100 = 0
         this.nb_carton_10_controle_100 = 0
-        this.nb_print_carton_10 =0
-        this.nb_print_carton_100 =0  
+        this.nb_print_carton_10 = 0
+        this.nb_print_carton_100 = 0
 
         Swal.fire(
           'Réinitialiser!',
@@ -342,12 +373,18 @@ export class WorkComponent implements OnInit {
     })
   }
 
-  sup_agent(){
+  sup_agent() {
     this.form.controls["agent"].setValue("");
-  
+
   }
 
-  sup_of(){
+
+  sup_code() {
+    this.form.controls["code"].setValue("");
+
+  }
+
+  sup_of() {
     this.form.controls["of"].setValue("");
   }
 }

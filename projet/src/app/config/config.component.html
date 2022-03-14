@@ -6,7 +6,7 @@
 
 
 
-  <div class="col-md-3  main-card mb-2 card " style="margin-left: 2%; margin-top: 1%;    ">
+  <div class="col-md-3  main-card mb-2 card " style=" margin-top: 1%;    ">
      <input type="file" (change)="readof($event )">
 
     <div width="100%" style="text-align: center; margin-top: 6%;  ">
@@ -17,15 +17,15 @@
       <table class="table table-striped ">
         <thead>
           <tr>
-            <th>Code emballage</th>
-            <th>Code Article OF</th>
+            <th>Code FL</th>
+            <th>Code OF</th>
             <th>E/100</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let obj of liste_of ">
             <td>
-              {{obj.code_produit}}
+              {{obj.code_fl}}
             </td>
             <td>
               {{obj.code_of}}
@@ -40,7 +40,7 @@
       </table>
      
   </div>
-  <div class="col-md-5  main-card mb-2 card " style="margin-left: 2%; margin-top: 1%;     ">
+  <div class="col-md-6  main-card mb-2 card " style=" margin-top: 1%;     ">
     <input type="file" (change)="readproduit($event )"> 
     <div width="100%" style="text-align: center; margin-top: 6%;  ">
       <img src="./../../assets/images/images.png" width="200px" height="150px" />
@@ -48,15 +48,20 @@
     <table class="table table-striped ">
       <thead>
         <tr> 
-          <th>Code article OF</th>
+          <th>Code Fl </th>
+          <th>code emballage </th>
           <th>Gamme</th>
           <th>Culot</th>
           <th>Puissance</th>
           <th>couleur</th>
+        
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let obj of liste_produit">
+          <td>
+            {{obj.codefl}}
+          </td>
           <td>
             {{obj.code}}
           </td>
@@ -71,15 +76,14 @@
           </td>
           <td>
             {{obj.couleur}}
-          </td>
-
+          </td> 
         </tr>
       </tbody>
 
 
     </table>
   </div>
-  <div class="col-md-3 main-card mb-2 card " style="margin-left: 2%;  margin-top: 1%;     ">
+  <div class="col-md-3 main-card mb-2 card " style=" margin-top: 1%;     ">
     <input type="file" (change)="readagent($event )">
 
     <div width="100%" style="text-align: center; margin-top: 6%;  ">
@@ -89,19 +93,18 @@
     <table class="table table-striped ">
       <thead>
         <tr> 
-          <th>Matricule agent</th> 
-          <th>Nom & Prenom</th>
+          <th>Matricule</th>  
+          <th>agent</th>  
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let obj of liste_agent;let index = index;">
           <td>
-            {{obj.matricule}}
-          </td> 
+            {{obj.matricule}}  
+          </td>  
           <td>
-            {{obj.nom}}
-          </td>
-
+        {{obj.nom}}
+          </td>  
         </tr>
       </tbody>
 
