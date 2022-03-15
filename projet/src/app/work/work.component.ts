@@ -10,7 +10,7 @@ import Swal from 'sweetalert2';
   styleUrls: ['./work.component.scss']
 })
 export class WorkComponent implements OnInit {
-  x: any = "A60"
+  x: any = "A60 B22"
   nb: any = 0;
   obj: any = {};
   nb_print_carton_10: any = 0;
@@ -317,16 +317,20 @@ export class WorkComponent implements OnInit {
   // Parametre de code a barre  
   width: any = 2;
   height: any = 21;
-  width_qr: any = 70;
-  imprimer() {
+  width_qr: any = 90;
+  async imprimer() {
     if (this.nb == 10 ) {
-      this.nb = Number(this.nb)
-      console.log(this.nb)
-      window.print()
+      this.nb = Number(this.nb) 
+      window.print()  
       this.nb= 0
     }
     else if (this.nb > 0 ) {
       window.print()
+      let a = this.nb
+      this.nb=  Number(this.nb_carton_10_controle_100)*10 + Number(this.nb) 
+      await this.delai(3000);
+      window.print()
+      this.nb=a
     }
     else {
       Swal.fire({
