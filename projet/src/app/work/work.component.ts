@@ -31,6 +31,7 @@ export class WorkComponent implements OnInit {
   historique_of: any = [];
   @ViewChild('ref_of', { static: false }) ref_of: any = MatInputModule;
   @ViewChild('ref_agent', { static: false }) ref_agent: any = MatInputModule;
+  @ViewChild('ref_code', { static: false }) ref_code: any = MatInputModule;
 
   constructor(public datePipe: DatePipe) {
     this.liste_produit = JSON.parse(localStorage.getItem('liste_produit') + "");
@@ -64,11 +65,14 @@ export class WorkComponent implements OnInit {
   // traitement sur ordre de fabrication  
   test_of: any = false;
   index_ordre_fabrication: any;
+  test_et_100:any;
+  test_fermer:any = false
   set_of(event: any) {
 
     if (event.key == "Enter") {
       let v = this.form.get('of')?.value
       this.test_of = false
+      this.test_fermer=false;
       this.nb = 0
       this.nb_carton_10 = 0
       this.nb_carton_100 = 0
@@ -76,22 +80,39 @@ export class WorkComponent implements OnInit {
       this.nb_print_carton_10 = 0
       this.nb_print_carton_100 = 0
       for (let i = 0; i < this.liste_of.length; i++) {
+      
         if (this.liste_of[i].code_of == v) {
-          this.test_of = true;
-          this.index_ordre_fabrication = i;
-          this.info = "OF : " + this.form.get('of')?.value + " ,agent: " + this.form.get('agent')?.value + ",Date : " + this.datePipe.transform(new Date(), 'dd/MM/yyyy  | HH:MM');
-          Swal.fire({
-            icon: 'success',
-            title: 'Ordre de fabrication',
-            showConfirmButton: false,
-            timer: 1000
-          })
+         
+           if(this.liste_of[i].etat=="ouvert")
+          {
+            this.test_of = true; 
+            this.index_ordre_fabrication = i;
+            this.info = "OF : " + this.form.get('of')?.value + " ,agent: " + this.form.get('agent')?.value + ",Date : " + this.datePipe.transform(new Date(), 'dd/MM/yyyy  | HH:MM');
+            this.test_et_100=this.liste_of[i].e100;
+            Swal.fire({
+              icon: 'success',
+              title: 'Ordre de fabrication',
+              showConfirmButton: false,
+              timer: 1000
+            })
+            this.ref_agent.nativeElement.focus();
+            this.form.controls['of'].disable();
+    
 
-          //this.ref_agent.nativeElement.focus();
+          }
+          else {
+            this.form.controls["of"].setValue("");
+            this.test_of = false;
+            Swal.fire({
+              icon: 'error',
+              title: '',
+              text: 'Ordre de fabrication Déjà Fermé ',
+            }) 
+            this.test_fermer=true
+          } 
         }
       }
-
-      if (this.test_of == false) {
+      if (this.test_of == false && this.test_fermer==false) {
         this.form.controls["of"].setValue("");
         Swal.fire({
           icon: 'error',
@@ -116,8 +137,7 @@ export class WorkComponent implements OnInit {
             this.nb_print_carton_100 = this.historique_of[i].nb_print_carton_100
           }
         }
-        console.log(this.test_of)
-        if (test_historique_of == false) {
+         if (test_historique_of == false) {
           this.obj = {}
           this.obj.of = v;
           this.obj.nb = this.nb;
@@ -128,8 +148,7 @@ export class WorkComponent implements OnInit {
           this.obj.nb_print_carton_100 = this.nb_print_carton_100
           this.historique_of.push(this.obj)
         }
-        console.log(this.historique_of)
-        localStorage.setItem('historique_of', JSON.stringify(this.historique_of));
+         localStorage.setItem('historique_of', JSON.stringify(this.historique_of));
 
         for (let i = 0; i < this.liste_produit.length; i++) {
           if (this.liste_produit[i].codefl == this.liste_of[this.index_ordre_fabrication].code_fl) {
@@ -144,6 +163,7 @@ export class WorkComponent implements OnInit {
 
           }
         }
+      
       }
     }
   }
@@ -188,6 +208,8 @@ export class WorkComponent implements OnInit {
           icon: 'error',
           title: '',
           text: "Produit Inconnu ",
+          showConfirmButton: false,
+          timer: 450
         })
       } else {
         // message erreur code produit et code fl et code of
@@ -203,7 +225,10 @@ export class WorkComponent implements OnInit {
 
       if (this.test_code == true) {
         this.value_code = this.form.get('code')?.value;
-        this.nb = Number(this.nb) + 1;
+        if(Number(this.nb) <10)
+        {
+          this.nb = Number(this.nb) + 1;
+        }        
         if ((Number(this.nb) % 10) == 0) {
           await this.delai(200);
           this.imprimer()
@@ -214,8 +239,11 @@ export class WorkComponent implements OnInit {
         }
         if ((this.nb_carton_10_controle_100 != 0) && (Number(this.nb_carton_10_controle_100) % 10) == 0) {
           this.nb = 100
-          await this.delai(3000);
-          window.print()
+          if(this.test_et_100==1)
+          {
+            await this.delai(3000);
+            window.print()
+          } 
           this.nb = 0;
           this.nb_carton_10_controle_100 = 0
           this.nb_print_carton_100 = Number(this.nb_print_carton_100) + 1
@@ -270,6 +298,16 @@ export class WorkComponent implements OnInit {
             showConfirmButton: false,
             timer: 1000
           })
+          if(this.test_of)
+          {
+            this.ref_code.nativeElement.focus(); 
+          }
+          else {
+            this.ref_of.nativeElement.focus(); 
+            this.form.controls['agent'].disable();
+
+          }
+
         }
       }
       if (this.test_agent == false) {
@@ -318,6 +356,7 @@ export class WorkComponent implements OnInit {
   width: any = 2;
   height: any = 21;
   width_qr: any = 90;
+  a:any;
   async imprimer() {
     if (this.nb == 10 ) {
       this.nb = Number(this.nb) 
@@ -328,9 +367,68 @@ export class WorkComponent implements OnInit {
       window.print()
       let a = this.nb
       this.nb=  Number(this.nb_carton_10_controle_100)*10 + Number(this.nb) 
-      await this.delai(3000);
-      window.print()
+     
+      if(this.test_et_100==1)
+      {
+        await this.delai(3000);
+        window.print()
+      } 
       this.nb=a
+      Swal.fire({
+        title: "Souhaitez-vous Fermer l'ordre de fabrication  ?",
+        showDenyButton: true,
+        showCancelButton: true,
+        confirmButtonText: 'oui',
+        denyButtonText: `Non`,
+      }).then((result) => {
+         if (result.isConfirmed) {
+          Swal.fire({
+            title: 'Code Admin',
+            html:
+              '<table>' +
+              '<tr><td>Code </td><td> <input id="swal-input1" value="" class="swal2-input"  placeholder="OF" ></td></tr>' +
+              
+              '</table>',
+            focusConfirm: false,
+            preConfirm: () => {
+              return [(<HTMLInputElement>document.getElementById('swal-input1')).value,
+               
+            ]
+            },
+            allowOutsideClick: () => !Swal.isLoading()
+          }).then((result) => {
+            this.a = result.value
+      
+            let test= this.a[2] || this.a[3] 
+            if (result.isConfirmed) {
+              if (this.a[0] == 'admin'  ) {
+                Swal.fire(
+                  'succés',
+                  'Ordre de fabrication ferme ',
+                  'success'
+                )
+                this.liste_of[this.index_ordre_fabrication].etat="fermé"
+                localStorage.setItem('liste_of', JSON.stringify(this.liste_of));
+
+              }
+              else { 
+                Swal.fire({
+                  title: 'Erreur ',
+                  text: 'Vérifier vos données  ',
+                  icon: 'warning',
+                  confirmButtonText: 'ok',
+                })
+      
+               
+              }
+            }
+      
+          });
+           
+        } else if (result.isDenied) {
+          Swal.fire("l'ordre de fabrication est ouvert", '', 'info')
+        }
+      })
     }
     else {
       Swal.fire({

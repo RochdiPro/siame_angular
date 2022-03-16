@@ -28,7 +28,7 @@
 
           <mat-form-field class="custom-width" style="margin-left: 5%; width: 25%;">
             <mat-label>Code à barres Produit</mat-label>
-            <input matInput placeholder="code" [(ngModel)]="form.code" formControlName="code"
+            <input matInput placeholder="code" [(ngModel)]="form.code" formControlName="code" #ref_code
               (keypress)="g_code($event)">
           </mat-form-field>
           <img src="./../../assets/images/trash-bin.png" (click)="sup_code()" width="20px" height="20px">
@@ -60,15 +60,14 @@
             <h3> Puissance : {{val_w}}</h3>
             <h3> couleur : {{val_k}} </h3>
             <div class="row ">
-
-              <div class="font-icon-wrapper col-md-5" (click)="imprimer()"><i class="pe-7s-print"> </i>
+              
+              <div class="font-icon-wrapper col-md-12" (click)="imprimer()"><i class="pe-7s-print"> </i>
                 <p>Imprimer</p>
               </div>
-              <div class="font-icon-wrapper col-md-2">
-              </div>
-              <div class="font-icon-wrapper col-md-5" (click)="reset()"><i class="pe-7s-refresh-2"> </i>
+               
+              <!-- <div class="font-icon-wrapper col-md-5" (click)="reset()"><i class="pe-7s-refresh-2"> </i>
                 <p>Reset</p>
-              </div>
+              </div> -->
             </div>
           </div>
         </div>
