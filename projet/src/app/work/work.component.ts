@@ -84,7 +84,7 @@ export class WorkComponent implements OnInit {
 
         if (this.liste_of[i].code_of == v) {
 
-          if (this.liste_of[i].etat == "lancer") {
+          if (this.liste_of[i].etat == "lancé") {
             this.test_of = true;
             this.index_ordre_fabrication = i;
             this.test_et_100 = this.liste_of[i].e100;
@@ -567,10 +567,7 @@ export class WorkComponent implements OnInit {
           }
         }
       });
-}
-
-
-
+} 
 
 async imprimer_slodee_traitement ()
 {
@@ -587,9 +584,16 @@ async imprimer_slodee_traitement ()
       window.print()
     }
 
-    this.liste_of[this.index_ordre_fabrication].etat = "soldée"
+    this.liste_of[this.index_ordre_fabrication].etat = "soldé"
     localStorage.setItem('liste_of', JSON.stringify(this.liste_of));
     this.router.navigate(['/']);
+  }
+  else  if (this.nb == 0){
+    Swal.fire({
+      title: 'Erreur ', 
+      icon: 'warning',
+      confirmButtonText: 'ok',
+    })
   }
 }
 

@@ -75,7 +75,8 @@ export class ConfigComponent implements OnInit {
         this.obj.gamme = t2[2]
         this.obj.culot = t2[4]
         this.obj.puissance = t2[3]
-        this.obj.couleur = t2[5]
+        this.obj.couleur = t2[5]  
+        this.obj.e100 = t2[6]
         if (this.obj.code != undefined  || this.obj.code != " "  )  { 
           this.liste_produit.push(this.obj) 
         }
@@ -120,29 +121,23 @@ export class ConfigComponent implements OnInit {
       title: 'Ordre de fabrication',
       html:
         '<table>' +
-        '<tr><td>Code OF</td><td> <input id="swal-input1" value="" class="swal2-input"  placeholder="OF" ></td></tr>' +
+        '<tr><td>N° OF</td><td> <input id="swal-input1" value="" class="swal2-input"  placeholder="OF" ></td></tr>' +
         '<tr><td>Code FL</td><td><input id="swal-input2" value="" class="swal2-input"  placeholder="FL..." >  </td></tr>' +
-      
-        '<tr><td> <h2 style="    margin-top: 25px;">E 100</h2></td><td> '+
-        '<input id="input3" name="input3"  type="radio" value="1"   style=" margin-top: 25px;">  oui  '+
-        '<input id="input4" name="input4"  type="radio" value="0"    style=" margin-top: 25px;    margin-left: 30px;">  non </td></tr>' +
  
         '</table>',
       focusConfirm: false,
       preConfirm: () => {
         return [(<HTMLInputElement>document.getElementById('swal-input1')).value,
         (<HTMLInputElement>document.getElementById('swal-input2')).value,
-        (<HTMLInputElement>document.getElementById('input3')).checked,
-        (<HTMLInputElement>document.getElementById('input4')).checked,
+     
       ]
       },
       allowOutsideClick: () => !Swal.isLoading()
     }).then((result) => {
       this.a = result.value
-
-      let test= this.a[2] || this.a[3] 
+ 
       if (result.isConfirmed) {
-        if (this.a[0] == '' || this.a[1] == ''|| test == false) {
+        if (this.a[0] == '' || this.a[1] == '' ) {
           Swal.fire({
             title: 'Erreur ',
             text: 'Vérifier vos données  ',
@@ -154,15 +149,25 @@ export class ConfigComponent implements OnInit {
           this.obj = {} 
           this.obj.code_of = this.a[0]
           this.obj.code_fl = this.a[1] 
-          this.obj.e100 = this.a[2] 
-          this.obj.etat =  "lancer"
-          if(this.a[2]==true)
+          this.obj.e100 = -1
+          for(let  j= 0 ; j< this.liste_produit.length ; j++)
           {
-            this.obj.e100=1;
-          }else if(this.a[3]==true)
+            console.log(this.a[1] == this.liste_produit[j].codefl)
+              if(this.a[1] == this.liste_produit[j].codefl)
+              {
+                this.obj.e100 = this.liste_produit[j].e100
+              }
+          }
+         
+          this.obj.etat =  "lancé"
+          if( this.obj.e100 == -1) 
           {
-            this.obj.e100=0;
-
+            Swal.fire({
+              title: 'Erreur ',
+              text: 'Code article ',
+              icon: 'warning',
+              confirmButtonText: 'ok',
+            })
           }
           this.liste_of.push(this.obj)
           localStorage.setItem('liste_of', JSON.stringify(this.liste_of));
