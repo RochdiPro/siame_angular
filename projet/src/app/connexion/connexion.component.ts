@@ -26,11 +26,10 @@ export class ConnexionComponent implements OnInit {
   cnx: FormGroup;
   value = '';
   cercle: any = false;
-  connecter: any = false;
-
+  connecter: any = false; 
   infonet: any = {};
 
-  constructor( private file: File, private plt: Platform, private fileOpener: FileOpener, private printer: Printer, private fb: FormBuilder, private router: Router, private datePipe: DatePipe) {
+  constructor(   private fb: FormBuilder, private router: Router ) {
     this.cnx = this.fb.group({
       id: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(30)]],
       pwd: ['', Validators.required],
@@ -41,15 +40,17 @@ export class ConnexionComponent implements OnInit {
   pdfObj: any;
   res: any; 
   connexion() {
-    
-
+    localStorage.setItem('accees_admin', "false"); 
     if (this.cnx.get("id")?.value == "admin" && this.cnx.get("pwd")?.value == "admin") { 
+      this.router.navigate(['/config']);
+      localStorage.setItem('accees_admin', "true");
+    }
+    else if (this.cnx.get("id")?.value == "utilisateur" && this.cnx.get("pwd")?.value == "utilisateur") { 
       this.router.navigate(['/config']);
  
     }else
     if (this.cnx.get("id")?.value == "agent" && this.cnx.get("pwd")?.value == "agent") { 
-      this.router.navigate(['/work']);
- 
+      this.router.navigate(['/work']); 
     }
     else 
     {
@@ -59,10 +60,7 @@ export class ConnexionComponent implements OnInit {
         icon: 'warning',
         confirmButtonText: 'ok',
       })
-    }
-   
-
-     
+    } 
   }
 
   ngOnInit(): void {

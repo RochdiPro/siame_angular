@@ -2,7 +2,84 @@
   style="text-align: center;margin-top: 3%;margin-bottom: 6%; text-shadow: 2px 4px 3px rgba(0,0,0,0.3); font-size: 600%;">
   Configuration </h1>
 
-<div class="row col-md-12 "  >
+<div class="row col-md-12 " *ngIf="!(accees_admin)"  >
+
+
+
+  <div class="col-md-5  main-card mb-2 card " style=" margin-top: 1%;    ">
+    
+
+    <div width="100%" style="text-align: center; margin-top: 6%;  ">
+      <img src="./../../assets/images/ordre.jpg" width="200px" height="150px" />
+      </div>
+      <button type="button" class="btn btn-success" (click) ="ajouter()">Ajouter</button>
+
+      <table class="table table-striped ">
+        <thead>
+          <tr>
+            <th>Code OF</th>
+            <th>Code FL</th> 
+            <th>État</th>
+            <th>E/100</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let obj of liste_of ">
+            <td>
+              {{obj.code_of}}
+            </td>
+            <td>
+              {{obj.code_fl}}
+            </td>
+            <td>
+              {{obj.etat}}
+            </td>
+            <td>
+              {{obj.e100}}
+            </td> 
+          </tr>
+        </tbody>
+
+
+      </table>
+     
+  </div>
+  <div class="col-md-2"></div>
+  <div class="col-md-5 main-card mb-2 card " style=" margin-top: 1%;     ">
+    
+
+    <div width="100%" style="text-align: center; margin-top: 6%;  ">
+      <img src="./../../assets/images/users.png" width="200px" height="150px" />
+
+    </div>
+    <button type="button" class="btn btn-success" (click) ="ajouter_agent()">Ajouter</button>
+
+    <table class="table table-striped ">
+      <thead>
+        <tr> 
+          <th>Matricule</th>  
+          <th>agent</th>  
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let obj of liste_agent;let index = index;">
+          <td>
+            {{obj.matricule}}  
+          </td>  
+          <td>
+        {{obj.nom}}
+          </td>  
+        </tr>
+      </tbody>
+
+
+    </table>
+  </div>
+
+
+</div>
+
+<div class="row col-md-12 "  *ngIf="accees_admin" >
 
 
 
@@ -44,7 +121,7 @@
       </table>
      
   </div>
-  <div class="col-md-6  main-card mb-2 card " style=" margin-top: 1%;     ">
+  <div  class="col-md-6  main-card mb-2 card " style=" margin-top: 1%;     ">
     <input type="file" (change)="readproduit($event )"> 
     <div width="100%" style="text-align: center; margin-top: 6%;  ">
       <img src="./../../assets/images/images.png" width="200px" height="150px" />

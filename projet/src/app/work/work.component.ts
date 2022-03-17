@@ -1,6 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { Router } from '@angular/router';
 import { MatInputModule } from 'mat-input';
 import Swal from 'sweetalert2';
 
@@ -33,7 +34,7 @@ export class WorkComponent implements OnInit {
   @ViewChild('ref_agent', { static: false }) ref_agent: any = MatInputModule;
   @ViewChild('ref_code', { static: false }) ref_code: any = MatInputModule;
 
-  constructor(public datePipe: DatePipe) {
+  constructor(public datePipe: DatePipe, private router: Router) {
     this.liste_produit = JSON.parse(localStorage.getItem('liste_produit') + "");
     this.liste_agent = JSON.parse(localStorage.getItem('liste_agent') + "");
     this.liste_of = JSON.parse(localStorage.getItem('liste_of') + "");
@@ -65,14 +66,14 @@ export class WorkComponent implements OnInit {
   // traitement sur ordre de fabrication  
   test_of: any = false;
   index_ordre_fabrication: any;
-  test_et_100:any;
-  test_fermer:any = false
+  test_et_100: any;
+  test_fermer: any = false
   set_of(event: any) {
 
     if (event.key == "Enter") {
       let v = this.form.get('of')?.value
       this.test_of = false
-      this.test_fermer=false;
+      this.test_fermer = false;
       this.nb = 0
       this.nb_carton_10 = 0
       this.nb_carton_100 = 0
@@ -80,15 +81,13 @@ export class WorkComponent implements OnInit {
       this.nb_print_carton_10 = 0
       this.nb_print_carton_100 = 0
       for (let i = 0; i < this.liste_of.length; i++) {
-      
+
         if (this.liste_of[i].code_of == v) {
-         
-           if(this.liste_of[i].etat=="ouvert")
-          {
-            this.test_of = true; 
+
+          if (this.liste_of[i].etat == "lancer") {
+            this.test_of = true;
             this.index_ordre_fabrication = i;
-            this.info = "OF : " + this.form.get('of')?.value + " ,agent: " + this.form.get('agent')?.value + ",Date : " + this.datePipe.transform(new Date(), 'dd/MM/yyyy  | HH:MM');
-            this.test_et_100=this.liste_of[i].e100;
+            this.test_et_100 = this.liste_of[i].e100;
             Swal.fire({
               icon: 'success',
               title: 'Ordre de fabrication',
@@ -97,7 +96,7 @@ export class WorkComponent implements OnInit {
             })
             this.ref_agent.nativeElement.focus();
             this.form.controls['of'].disable();
-    
+
 
           }
           else {
@@ -106,13 +105,13 @@ export class WorkComponent implements OnInit {
             Swal.fire({
               icon: 'error',
               title: '',
-              text: 'Ordre de fabrication Déjà Fermé ',
-            }) 
-            this.test_fermer=true
-          } 
+              text: 'Ordre de fabrication soldée  ',
+            })
+            this.test_fermer = true
+          }
         }
       }
-      if (this.test_of == false && this.test_fermer==false) {
+      if (this.test_of == false && this.test_fermer == false) {
         this.form.controls["of"].setValue("");
         Swal.fire({
           icon: 'error',
@@ -137,7 +136,7 @@ export class WorkComponent implements OnInit {
             this.nb_print_carton_100 = this.historique_of[i].nb_print_carton_100
           }
         }
-         if (test_historique_of == false) {
+        if (test_historique_of == false) {
           this.obj = {}
           this.obj.of = v;
           this.obj.nb = this.nb;
@@ -148,13 +147,13 @@ export class WorkComponent implements OnInit {
           this.obj.nb_print_carton_100 = this.nb_print_carton_100
           this.historique_of.push(this.obj)
         }
-         localStorage.setItem('historique_of', JSON.stringify(this.historique_of));
+        localStorage.setItem('historique_of', JSON.stringify(this.historique_of));
 
         for (let i = 0; i < this.liste_produit.length; i++) {
           if (this.liste_produit[i].codefl == this.liste_of[this.index_ordre_fabrication].code_fl) {
             this.test_code_produit = true
             let c = this.liste_produit[i].codefl
-            this.value_code = c;   
+            this.value_code = c;
             this.val_e = this.liste_produit[i].culot
             this.val_led = this.liste_produit[i].gamme.trim()
             this.val_w = this.liste_produit[i].puissance
@@ -163,7 +162,8 @@ export class WorkComponent implements OnInit {
 
           }
         }
-      
+        this.info = "OF : " + this.form.get('of')?.value + " ,agent: " + this.form.get('agent')?.value + ",Date : " + this.datePipe.transform(new Date(), 'dd/MM/yyyy  | HH:MM') + " , Qte : "+this.nb;
+
       }
     }
   }
@@ -177,18 +177,19 @@ export class WorkComponent implements OnInit {
   test_code: any = false;
   test_code_produit: any = false;
   index_code_produit: any = -1
+  test_correction_code: any = false
   async g_code(event: any) {
     if (event.key == "Enter") {
       let v = this.form.get('code')?.value
       this.test_code = false
       this.test_code_produit = false
-      let codefl=""
+      let codefl = ""
       // chercher produit et get code fl 
       for (let i = 0; i < this.liste_produit.length; i++) {
         if (this.liste_produit[i].code == v) {
           this.test_code_produit = true
           this.index_code_produit = i;
-          codefl=this.liste_produit[i].codefl
+          codefl = this.liste_produit[i].codefl
         }
       }
       // get true false if code fl ==  code empallage
@@ -203,35 +204,106 @@ export class WorkComponent implements OnInit {
 
       // message produit inconu 
       if (this.test_code_produit == false) {
-        this.form.controls["code"].setValue("");
+
+        this.form.controls['code'].disable();
+        this.test_correction_code = true
         Swal.fire({
           icon: 'error',
-          title: '',
-          text: "Produit Inconnu ",
-          showConfirmButton: false,
-          timer: 450
-        })
+          title: " Produit Inconnu  ",
+          html:
+            '<table>' +
+            '<tr><td>Code </td><td> <input type="password" id="swal-input1" value="" class="swal2-input" style="    margin-left: 16%;"    ></td></tr>' +
+            '</table>',
+          focusConfirm: false,
+          preConfirm: () => {
+            return [(<HTMLInputElement>document.getElementById('swal-input1')).value,
+            ]
+          },
+          allowOutsideClick: () => !Swal.isLoading()
+        }).then((result) => {
+          this.a = result.value
+
+          let test = this.a[2] || this.a[3]
+          if (result.isConfirmed) {
+            if (this.a[0] == 'utilisateur') {
+              this.test_correction_code = false
+              this.form.controls["code"].setValue("");
+              this.form.controls['code'].enable();
+              this.ref_code.nativeElement.focus();
+
+            }
+            else {
+              Swal.fire({
+
+                text: 'Vérifier vos données',
+                imageUrl: './../assets/images/panne.png',
+                imageWidth: 400,
+                imageHeight: 400,
+
+              })
+            }
+          }
+        });
+
       } else {
         // message erreur code produit et code fl et code of
         if (this.test_code == false) {
-          this.form.controls["code"].setValue("");
+
+          this.form.controls['code'].disable();
+          this.test_correction_code = true
           Swal.fire({
             icon: 'error',
-            title: '',
-            text: "l'ordre de fabrication et le code d'emballage ne correspondent pas ",
-          })
+            title: " l'ordre de fabrication et le code d'emballage ne correspondent pas  ",
+            html:
+              '<table>' +
+              '<tr><td>Code </td><td> <input type="password" id="swal-input1" value="" class="swal2-input" style="    margin-left: 16%;"    ></td></tr>' +
+              '</table>',
+            focusConfirm: false,
+            preConfirm: () => {
+              return [(<HTMLInputElement>document.getElementById('swal-input1')).value,
+              ]
+            },
+            allowOutsideClick: () => !Swal.isLoading()
+          }).then((result) => {
+            this.a = result.value
+
+            let test = this.a[2] || this.a[3]
+            if (result.isConfirmed) {
+              if (this.a[0] == 'utilisateur') {
+                this.test_correction_code = false
+                this.form.controls['code'].enable();
+                this.form.controls["code"].setValue("");
+
+                this.ref_code.nativeElement.focus();
+
+              }
+              else {
+
+                Swal.fire({
+                  text: 'Vérifier vos données',
+                  imageUrl: './../assets/images/panne.png',
+                  imageWidth: 400,
+                  imageHeight: 400,
+
+                })
+              }
+            }
+          });
+
         }
       }
 
       if (this.test_code == true) {
         this.value_code = this.form.get('code')?.value;
-        if(Number(this.nb) <10)
-        {
+        if (Number(this.nb) < 10) {
           this.nb = Number(this.nb) + 1;
-        }        
-        if ((Number(this.nb) % 10) == 0) {
+
+        }
+        if ((Number(this.nb) % 10) == 0) { 
+          this.info = "OF : " + this.form.get('of')?.value + " ,agent: " + this.form.get('agent')?.value + ",Date : " + this.datePipe.transform(new Date(), 'dd/MM/yyyy  | HH:MM') + " , Qte : "+this.nb;
+
           await this.delai(200);
-          this.imprimer()
+          window.print()
           this.nb = 0;
           this.nb_carton_10 = 0
           this.nb_carton_10_controle_100 = Number(this.nb_carton_10_controle_100) + 1
@@ -239,11 +311,11 @@ export class WorkComponent implements OnInit {
         }
         if ((this.nb_carton_10_controle_100 != 0) && (Number(this.nb_carton_10_controle_100) % 10) == 0) {
           this.nb = 100
-          if(this.test_et_100==1)
-          {
+          if (this.test_et_100 == 1) {
+            this.info = "OF : " + this.form.get('of')?.value + " ,agent: " + this.form.get('agent')?.value + ",Date : " + this.datePipe.transform(new Date(), 'dd/MM/yyyy  | HH:MM') + " , Qte : "+this.nb;
             await this.delai(3000);
             window.print()
-          } 
+          }
           this.nb = 0;
           this.nb_carton_10_controle_100 = 0
           this.nb_print_carton_100 = Number(this.nb_print_carton_100) + 1
@@ -253,6 +325,49 @@ export class WorkComponent implements OnInit {
       }
     }
   }
+
+
+  correction_code() {
+    Swal.fire({
+      icon: 'error',
+      title: " Code ",
+      html:
+        '<table>' +
+        '<tr> <td>Code </td><td> <input type="password" id="swal-input1" value="" class="swal2-input"   style="    margin-left: 16%;" ></td></tr>' +
+        '</table>',
+      focusConfirm: false,
+      preConfirm: () => {
+        return [(<HTMLInputElement>document.getElementById('swal-input1')).value,
+        ]
+      },
+      allowOutsideClick: () => !Swal.isLoading()
+    }).then((result) => {
+      this.a = result.value
+
+      let test = this.a[2] || this.a[3]
+      if (result.isConfirmed) {
+        if (this.a[0] == 'utilisateur') {
+          this.test_correction_code = false
+          this.form.controls['code'].enable();
+          this.form.controls["code"].setValue("");
+          this.ref_code.nativeElement.focus();
+        }
+        else {
+          Swal.fire({
+
+            text: 'Vérifier vos données',
+            imageUrl: './../assets/images/panne.png',
+            imageWidth: 400,
+            imageHeight: 400,
+
+          })
+        }
+      }
+    });
+
+  }
+
+
   // temps d'attente pour le traitement de fonction 
   delai(ms: number) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -298,12 +413,11 @@ export class WorkComponent implements OnInit {
             showConfirmButton: false,
             timer: 1000
           })
-          if(this.test_of)
-          {
-            this.ref_code.nativeElement.focus(); 
+          if (this.test_of) {
+            this.ref_code.nativeElement.focus();
           }
           else {
-            this.ref_of.nativeElement.focus(); 
+            this.ref_of.nativeElement.focus();
             this.form.controls['agent'].disable();
 
           }
@@ -335,20 +449,49 @@ export class WorkComponent implements OnInit {
       })
     }
     else {
-      this.btnlock = !(this.btnlock)
-      if (this.btnlock) {
+
+      if (this.btnlock == false) {
+        this.btnlock = true
         this.form.controls['of'].disable();
         this.form.controls['agent'].disable();
         this.form.controls['code'].enable();
       } else {
-        this.form.controls['of'].enable();
-        this.form.controls['agent'].enable();
-        this.form.controls['code'].disable();
 
+        Swal.fire({
+          title: " Changer l'ordre de fabrication  ",
+          html:
+            '<table>' +
+            '<tr><td>Code </td><td> <input type="password" id="swal-input1" value="" class="swal2-input"  margin-left: 16%;" ></td></tr>' +
+            '</table>',
+          focusConfirm: false,
+          preConfirm: () => {
+            return [(<HTMLInputElement>document.getElementById('swal-input1')).value,
+            ]
+          },
+          allowOutsideClick: () => !Swal.isLoading()
+        }).then((result) => {
+          this.a = result.value
+
+          let test = this.a[2] || this.a[3]
+          if (result.isConfirmed) {
+            if (this.a[0] == 'utilisateur') {
+              this.btnlock = false
+              this.form.controls['of'].enable();
+              this.form.controls['agent'].enable();
+              this.form.controls['code'].disable();
+            }
+            else {
+              Swal.fire({
+                title: 'Erreur ',
+                text: 'Vérifier vos données  ',
+                icon: 'warning',
+                confirmButtonText: 'ok',
+              })
+            }
+          }
+        });
       }
-
     }
-
   }
 
 
@@ -356,137 +499,146 @@ export class WorkComponent implements OnInit {
   width: any = 2;
   height: any = 21;
   width_qr: any = 90;
-  a:any;
-  async imprimer() {
-    if (this.nb == 10 ) {
-      this.nb = Number(this.nb) 
-      window.print()  
-      this.nb= 0
-    }
-    else if (this.nb > 0 ) {
-      window.print()
-      let a = this.nb
-      this.nb=  Number(this.nb_carton_10_controle_100)*10 + Number(this.nb) 
-     
-      if(this.test_et_100==1)
-      {
-        await this.delai(3000);
-        window.print()
-      } 
-      this.nb=a
-      Swal.fire({
-        title: "Souhaitez-vous Fermer l'ordre de fabrication  ?",
-        showDenyButton: true,
-        showCancelButton: true,
-        confirmButtonText: 'oui',
-        denyButtonText: `Non`,
-      }).then((result) => {
-         if (result.isConfirmed) {
-          Swal.fire({
-            title: 'Code Admin',
-            html:
-              '<table>' +
-              '<tr><td>Code </td><td> <input id="swal-input1" value="" class="swal2-input"  placeholder="OF" ></td></tr>' +
-              
-              '</table>',
-            focusConfirm: false,
-            preConfirm: () => {
-              return [(<HTMLInputElement>document.getElementById('swal-input1')).value,
-               
-            ]
-            },
-            allowOutsideClick: () => !Swal.isLoading()
-          }).then((result) => {
-            this.a = result.value
-      
-            let test= this.a[2] || this.a[3] 
-            if (result.isConfirmed) {
-              if (this.a[0] == 'admin'  ) {
-                Swal.fire(
-                  'succés',
-                  'Ordre de fabrication ferme ',
-                  'success'
-                )
-                this.liste_of[this.index_ordre_fabrication].etat="fermé"
-                localStorage.setItem('liste_of', JSON.stringify(this.liste_of));
-
-              }
-              else { 
-                Swal.fire({
-                  title: 'Erreur ',
-                  text: 'Vérifier vos données  ',
-                  icon: 'warning',
-                  confirmButtonText: 'ok',
-                })
-      
-               
-              }
-            }
-      
-          });
-           
-        } else if (result.isDenied) {
-          Swal.fire("l'ordre de fabrication est ouvert", '', 'info')
-        }
-      })
-    }
-    else {
-      Swal.fire({
-        icon: 'error',
-        title: '',
-        text: '  ',
-      })
-    }
-  }
-
-
-
-  reset() {
+  a: any;
+   
+  async slodee() {
     Swal.fire({
-      title: 'Êtes-vous sûr? ',
-      text: "Vous ne pourrez pas revenir en arrière !",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'oui'
+      title: " soldée l'ordre de fabrication  ",
+      html:
+        '<table>' +
+        '<tr><td>Code </td><td> <input type="password" id="swal-input1" value="" class="swal2-input"   margin-left: 16%;" ></td></tr>' +
+        '</table>',
+      focusConfirm: false,
+      preConfirm: () => {
+        return [(<HTMLInputElement>document.getElementById('swal-input1')).value,
+        ]
+      },
+      allowOutsideClick: () => !Swal.isLoading()
     }).then((result) => {
+      this.a = result.value
+
+      let test = this.a[2] || this.a[3]
       if (result.isConfirmed) {
-        this.form.controls["code"].setValue("");
-        this.form.controls["of"].setValue("");
-        this.form.controls["agent"].setValue("");
-        this.val_k = "";
-        this.val_w = "";
-        this.val_led = "";
-        this.val_e = "";
-        this.nb = 0
-        this.nb_carton_10 = 0
-        this.nb_carton_100 = 0
-        this.nb_carton_10_controle_100 = 0
-        this.nb_print_carton_10 = 0
-        this.nb_print_carton_100 = 0
-
-        Swal.fire(
-          'Réinitialiser!',
-          ' ',
-          'success'
-        )
+        if (this.a[0] == 'utilisateur') {
+          this.liste_of[this.index_ordre_fabrication].etat = "soldée"
+          localStorage.setItem('liste_of', JSON.stringify(this.liste_of));
+          this.router.navigate(['/']);
+        }
+        else {
+          Swal.fire({
+            title: 'Erreur ',
+            text: 'Vérifier vos données  ',
+            icon: 'warning',
+            confirmButtonText: 'ok',
+          })
+        }
       }
-    })
-  }
-
-  sup_agent() {
-    this.form.controls["agent"].setValue("");
+    });
 
   }
 
+  async imprimer_slodee() {
+    Swal.fire({
+      title: " soldée l'ordre de fabrication  ",
+      html:
+        '<table>' +
+        '<tr><td>Code </td><td> <input type="password" id="swal-input1" value="" class="swal2-input"   margin-left: 16%;" ></td></tr>' +
+        '</table>',
+      focusConfirm: false,
+      preConfirm: () => {
+        return [(<HTMLInputElement>document.getElementById('swal-input1')).value,
+        ]
+      },
+      allowOutsideClick: () => !Swal.isLoading()
+    }).then((result) => {
+      this.a = result.value
+      let test = this.a[2] || this.a[3]
+      if (result.isConfirmed) {
+        if (this.a[0] == 'utilisateur') {
+            this.imprimer_slodee_traitement()
+          }
+          else {
+            Swal.fire({
+              title: 'Erreur ',
+              text: 'Vérifier vos données  ',
+              icon: 'warning',
+              confirmButtonText: 'ok',
+            })
+          }
+        }
+      });
+}
 
-  sup_code() {
-    this.form.controls["code"].setValue("");
 
+
+
+async imprimer_slodee_traitement ()
+{
+  
+  if (this.nb > 0) {
+    this.info = "OF : " + this.form.get('of')?.value + " ,agent: " + this.form.get('agent')?.value + ",Date : " + this.datePipe.transform(new Date(), 'dd/MM/yyyy  | HH:MM') + " , Qte : "+this.nb;
+    await this.delai(400);
+    window.print()
+    let a = this.nb
+    this.nb = Number(this.nb_carton_10_controle_100) * 10 + Number(this.nb)
+    if (this.test_et_100 == 1) {
+      this.info = "OF : " + this.form.get('of')?.value + " ,agent: " + this.form.get('agent')?.value + ",Date : " + this.datePipe.transform(new Date(), 'dd/MM/yyyy  | HH:MM') + " , Qte : "+this.nb;
+      await this.delai(3000);
+      window.print()
+    }
+
+    this.liste_of[this.index_ordre_fabrication].etat = "soldée"
+    localStorage.setItem('liste_of', JSON.stringify(this.liste_of));
+    this.router.navigate(['/']);
   }
+}
 
-  sup_of() {
-    this.form.controls["of"].setValue("");
-  }
+reset() {
+  Swal.fire({
+    title: 'Êtes-vous sûr? ',
+    text: "Vous ne pourrez pas revenir en arrière !",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'oui'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.form.controls["code"].setValue("");
+      this.form.controls["of"].setValue("");
+      this.form.controls["agent"].setValue("");
+      this.val_k = "";
+      this.val_w = "";
+      this.val_led = "";
+      this.val_e = "";
+      this.nb = 0
+      this.nb_carton_10 = 0
+      this.nb_carton_100 = 0
+      this.nb_carton_10_controle_100 = 0
+      this.nb_print_carton_10 = 0
+      this.nb_print_carton_100 = 0
+
+      Swal.fire(
+        'Réinitialiser!',
+        ' ',
+        'success'
+      )
+    }
+  })
+}
+
+sup_agent() {
+  this.form.controls["agent"].setValue("");
+
+}
+
+
+sup_code() {
+  this.form.controls["code"].setValue("");
+
+}
+
+sup_of() {
+  this.form.controls["of"].setValue("");
+}
 }

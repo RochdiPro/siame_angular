@@ -11,11 +11,13 @@ export class ConfigComponent implements OnInit {
   liste_produit: any = [];
   liste_agent: any = [];
   liste_of: any = [];
+  accees_admin:any;
   constructor() {
     this.liste_produit = JSON.parse(localStorage.getItem('liste_produit') + "");
     this.liste_agent = JSON.parse(localStorage.getItem('liste_agent') + "");
     this.liste_of = JSON.parse(localStorage.getItem('liste_of') + "");
-
+    this.accees_admin = JSON.parse(localStorage.getItem('accees_admin') + "");
+    
   }
 
   ngOnInit(): void {
@@ -38,10 +40,9 @@ export class ConfigComponent implements OnInit {
         this.obj.code_of = t2[0]
         this.obj.code_fl = t2[1]
         this.obj.e100 =  t2[2]
-        this.obj.etat =  "ouvert"
+        this.obj.etat =  "lancer"
 
-      //  console.log("-"+i+"-"+this.obj.code_of +"-")
-
+ 
         if (this.obj.code_of != undefined || this.obj.code_of != " " ) {
          if((this.obj.code_of == "" )==false)
          {
@@ -154,7 +155,7 @@ export class ConfigComponent implements OnInit {
           this.obj.code_of = this.a[0]
           this.obj.code_fl = this.a[1] 
           this.obj.e100 = this.a[2] 
-          this.obj.etat =  "ouvert"
+          this.obj.etat =  "lancer"
           if(this.a[2]==true)
           {
             this.obj.e100=1;
@@ -181,7 +182,7 @@ export class ConfigComponent implements OnInit {
   ajouter_agent() {
 
     Swal.fire({
-      title: 'Ordre de fabrication',
+      title: 'Agent',
       html:
         '<table>' +
         '<tr><td>Matricule</td><td> <input id="swal-input1" value="" class="swal2-input"  placeholder="" ></td></tr>' +

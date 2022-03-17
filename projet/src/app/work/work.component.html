@@ -21,7 +21,7 @@
           </mat-form-field>
           <img src="./../../assets/images/trash-bin.png" (click)="sup_agent()" width="20px" height="20px">
 
-          <img *ngIf="btnlock" style="margin-left: 3%;" src="./../../assets/images/lock.png" width="50px" height="50px"
+          <img *ngIf="btnlock==true" style="margin-left: 3%;" src="./../../assets/images/lock.png" width="50px" height="50px"
             (click)="lock()">
           <img *ngIf="btnlock==false" style="margin-left: 3%;" src="./../../assets/images/unlock.png" width="50px"
             height="50px" (click)="lock()">
@@ -31,7 +31,8 @@
             <input matInput placeholder="code" [(ngModel)]="form.code" formControlName="code" #ref_code
               (keypress)="g_code($event)">
           </mat-form-field>
-          <img src="./../../assets/images/trash-bin.png" (click)="sup_code()" width="20px" height="20px">
+          <img *ngIf="test_correction_code==false" src="./../../assets/images/trash-bin.png" (click)="sup_code()" width="20px" height="20px">
+          <img *ngIf="test_correction_code==true" src="./../../assets/images/panne.png" (click)="correction_code()" width="20px" height="20px">
 
         </section>
       </div>
@@ -59,16 +60,7 @@
             <h3> Culot : {{ val_e}} </h3>
             <h3> Puissance : {{val_w}}</h3>
             <h3> couleur : {{val_k}} </h3>
-            <div class="row ">
-              
-              <div class="font-icon-wrapper col-md-12" (click)="imprimer()"><i class="pe-7s-print"> </i>
-                <p>Imprimer</p>
-              </div>
-               
-              <!-- <div class="font-icon-wrapper col-md-5" (click)="reset()"><i class="pe-7s-refresh-2"> </i>
-                <p>Reset</p>
-              </div> -->
-            </div>
+           
           </div>
         </div>
 
@@ -119,6 +111,11 @@
               
            
 
+          </div>
+          <div class="row " id="non-printable">
+            <button type="button" class="btn btn-success" (click)="imprimer_slodee()" style="margin-left: 10px;">Imprimer et Soldée OF</button>
+            <button *ngIf="(nb==0)||(nb==100)||(nb==10)" type="button" class="btn btn-danger"  (click)="slodee()"style="margin-left: 140px;">Soldée OF</button>
+         
           </div>
 
         </div>

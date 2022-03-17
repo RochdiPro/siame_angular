@@ -40,8 +40,7 @@ import { MenuComponent } from './menu/menu.component';
     AppComponent,
     WorkComponent,
     ConfigComponent,
-    MenuComponent,
-     
+    MenuComponent, 
    ],
   imports: [
     FlexLayoutModule,
