@@ -105,7 +105,7 @@ export class WorkComponent implements OnInit {
             Swal.fire({
               icon: 'error',
               title: '',
-              text: 'Ordre de fabrication soldée  ',
+              text: 'Ordre de fabrication soldé  ',
             })
             this.test_fermer = true
           }
