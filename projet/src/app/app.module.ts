@@ -34,13 +34,17 @@ import { WorkComponent } from './work/work.component';
 import { ConfigComponent } from './config/config.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MenuComponent } from './menu/menu.component';
+import { Work2Component } from './work2/work2.component';
+import { Config2Component } from './config2/config2.component';
  
 @NgModule({
   declarations: [
     AppComponent,
     WorkComponent,
     ConfigComponent,
-    MenuComponent, 
+    MenuComponent,
+    Work2Component,
+    Config2Component, 
    ],
   imports: [
     FlexLayoutModule,

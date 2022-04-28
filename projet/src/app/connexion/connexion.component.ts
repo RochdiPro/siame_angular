@@ -42,15 +42,23 @@ export class ConnexionComponent implements OnInit {
   connexion() {
     localStorage.setItem('accees_admin', "false"); 
     if (this.cnx.get("id")?.value == "admin" && this.cnx.get("pwd")?.value == "admin") { 
-      this.router.navigate(['/config']);
+      this.router.navigate(['/menu']);
       localStorage.setItem('accees_admin', "true");
     }
-    else if (this.cnx.get("id")?.value == "utilisateur" && this.cnx.get("pwd")?.value == "utilisateur") { 
+    else if (this.cnx.get("id")?.value == "utilisateur" && this.cnx.get("pwd")?.value == "lampe") { 
       this.router.navigate(['/config']);
  
+    }
+    else if (this.cnx.get("id")?.value == "utilisateur" && this.cnx.get("pwd")?.value == "disjoncteur") { 
+      this.router.navigate(['/config2']);
+ 
     }else
-    if (this.cnx.get("id")?.value == "agent" && this.cnx.get("pwd")?.value == "agent") { 
+    if (this.cnx.get("id")?.value == "agent" && this.cnx.get("pwd")?.value == "lampe") { 
       this.router.navigate(['/work']); 
+    }
+    else
+    if (this.cnx.get("id")?.value == "agent" && this.cnx.get("pwd")?.value == "disjoncteur") { 
+      this.router.navigate(['/work2']); 
     }
     else 
     {
@@ -65,10 +73,6 @@ export class ConnexionComponent implements OnInit {
 
   ngOnInit(): void {
   }
-
  
-   
- 
-  
 
 }

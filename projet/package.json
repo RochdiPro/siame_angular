@@ -64,6 +64,7 @@
     "ng2-charts": "^2.2.3",
     "ngx-barcode": "^0.3.0",
     "ngx-material-file-input": "^0.3.1",
+    "ngx-papaparse": "^5.1.0",
     "ngx-qrcode-svg": "^2.0.0",
     "ngx-qrcode2": "^9.0.0",
     "ngx-spinner": "^11.0.2",

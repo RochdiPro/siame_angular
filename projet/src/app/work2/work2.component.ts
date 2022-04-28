@@ -6,11 +6,12 @@ import { MatInputModule } from 'mat-input';
 import Swal from 'sweetalert2';
 
 @Component({
-  selector: 'app-work',
-  templateUrl: './work.component.html',
-  styleUrls: ['./work.component.scss']
+  selector: 'app-work2',
+  templateUrl: './work2.component.html',
+  styleUrls: ['./work2.component.scss']
 })
-export class WorkComponent implements OnInit {
+export class Work2Component implements OnInit {
+
   x: any = "A60 B22"
   nb: any = 0;
   obj: any = {};
@@ -24,22 +25,23 @@ export class WorkComponent implements OnInit {
   liste_produit: any = [];
   liste_agent: any = [];
   liste_of: any = [];
-  val_led: any = ""
-  val_k: any = ""
-  val_w: any = ""
-  val_e: any = ""
-  src_img: any = "./../../assets/images/" + this.val_led + ".svg"
+  val_resume: any = ""
+  val_gamme: any = ""
+  val_qte_reg: any = ""
+  val_des: any = ""
   historique_of: any = [];
+  qte_dis_empa: any;
   @ViewChild('ref_of', { static: false }) ref_of: any = MatInputModule;
   @ViewChild('ref_agent', { static: false }) ref_agent: any = MatInputModule;
   @ViewChild('ref_code', { static: false }) ref_code: any = MatInputModule;
+  liste_des_codes: any = [];
 
   constructor(public datePipe: DatePipe, private router: Router) {
-    this.liste_produit = JSON.parse(localStorage.getItem('liste_produit') + "");
-    this.liste_agent = JSON.parse(localStorage.getItem('liste_agent') + "");
-    this.liste_of = JSON.parse(localStorage.getItem('liste_of') + "");
+    this.liste_produit = JSON.parse(localStorage.getItem('liste_produit_dis') + "");
+    this.liste_agent = JSON.parse(localStorage.getItem('liste_agent_dis') + "");
+    this.liste_of = JSON.parse(localStorage.getItem('liste_of_dis') + "");
     this.form.controls['code'].disable();
-    this.historique_of = JSON.parse(localStorage.getItem('historique_of') + "");
+    this.historique_of = JSON.parse(localStorage.getItem('historique_of_dis') + "");
 
     if (this.liste_agent == undefined || this.liste_of == undefined || this.liste_produit == undefined) {
       Swal.fire({
@@ -147,22 +149,21 @@ export class WorkComponent implements OnInit {
           this.obj.nb_print_carton_100 = this.nb_print_carton_100
           this.historique_of.push(this.obj)
         }
-        localStorage.setItem('historique_of', JSON.stringify(this.historique_of));
+        localStorage.setItem('historique_of_dis', JSON.stringify(this.historique_of));
 
         for (let i = 0; i < this.liste_produit.length; i++) {
-          if (this.liste_produit[i].codefl == this.liste_of[this.index_ordre_fabrication].code_fl) {
+          if (this.liste_produit[i].code == this.liste_of[this.index_ordre_fabrication].code) {
             this.test_code_produit = true
-            let c = this.liste_produit[i].codefl
+            let c = this.liste_produit[i].code
             this.value_code = c;
-            this.val_e = this.liste_produit[i].culot
-            this.val_led = this.liste_produit[i].gamme.trim()
-            this.val_w = this.liste_produit[i].puissance
-            this.val_k = this.liste_produit[i].couleur
-            this.src_img = "./../../assets/images/" + this.val_led + ".svg"
+            this.val_resume = this.liste_produit[i].resume
+            this.val_gamme = this.liste_produit[i].gamme.trim()
+            this.val_des = this.liste_produit[i].des
+            this.val_qte_reg = this.liste_produit[i].qte_reg
 
           }
         }
-        this.info = "OF : " + this.form.get('of')?.value + " ,agent: " + this.form.get('agent')?.value + ",Date : " + new Date().toLocaleString () + " , Qte : "+this.nb;
+        this.info = "OF : " + this.form.get('of')?.value + " ,agent: " + this.form.get('agent')?.value + ",Date : " + new Date().toLocaleString() + " , Qte : " + this.nb;
 
       }
     }
@@ -178,23 +179,35 @@ export class WorkComponent implements OnInit {
   test_code_produit: any = false;
   index_code_produit: any = -1
   test_correction_code: any = false
+  test_redandance: any = false
   async g_code(event: any) {
     if (event.key == "Enter") {
-      let v = this.form.get('code')?.value
+      let ch = this.form.get('code')?.value
+      this.test_redandance = false;
+      for (let cpt = 0; cpt < this.liste_des_codes.length; cpt++) {
+        if (ch == this.liste_des_codes[cpt]) {
+          this.test_redandance = true
+        }
+      }
+
+      this.liste_des_codes.push(ch)
+      let v = ch.split("_")[0]
       this.test_code = false
       this.test_code_produit = false
-      let codefl = ""
+      let code = ""
       // chercher produit et get code fl 
       for (let i = 0; i < this.liste_produit.length; i++) {
         if (this.liste_produit[i].code == v) {
           this.test_code_produit = true
           this.index_code_produit = i;
-          codefl = this.liste_produit[i].codefl
+          code = this.liste_produit[i].code
+          this.qte_dis_empa = this.liste_produit[i].qte_reg
         }
       }
+
       // get true false if code fl ==  code empallage
       for (let i = 0; i < this.liste_of.length; i++) {
-        if (this.liste_of[i].code_fl == codefl) {
+        if (this.liste_of[i].code == code) {
           if (this.liste_of[i].code_of == this.form.get('of')?.value) {
             this.test_code = true;
             this.form.controls["code"].setValue("");
@@ -247,7 +260,7 @@ export class WorkComponent implements OnInit {
 
       } else {
         // message erreur code produit et code fl et code of
-        if (this.test_code == false) {
+        if (this.test_code == false ) {
 
           this.form.controls['code'].disable();
           this.test_correction_code = true
@@ -293,34 +306,31 @@ export class WorkComponent implements OnInit {
         }
       }
 
-      if (this.test_code == true) {
+      if (this.test_code == true && this.test_redandance==false) {
         this.value_code = this.form.get('code')?.value;
-        if (Number(this.nb) < 10) {
-          this.nb = Number(this.nb) + 1;  
+        if (Number(this.nb) < Number(this.qte_dis_empa)) {
+          this.nb = Number(this.nb) + 1;
         }
-        if ((Number(this.nb) % 10) == 0) { 
-          this.info = "OF : " + this.form.get('of')?.value + " ,agent: " + this.form.get('agent')?.value + ",Date : " + new Date().toLocaleString () + " , Qte : "+this.nb;
+        if ((Number(this.nb) % Number(this.qte_dis_empa)) == 0) {
+          this.info = "OF : " + this.form.get('of')?.value + " ,agent: " + this.form.get('agent')?.value + ",Date : " + new Date().toLocaleString() + " , Qte : " + this.nb;
 
           await this.delai(200);
           window.print()
           this.nb = 0;
-          this.nb_carton_10 = 0
-          this.nb_carton_10_controle_100 = Number(this.nb_carton_10_controle_100) + 1
-          this.nb_print_carton_10 = Number(this.nb_print_carton_10) + 1
+          this.nb_carton_10 = this.nb_carton_10 + 1
+          //this.nb_print_carton_10 = Number(this.nb_print_carton_10) + 1
         }
-        if ((this.nb_carton_10_controle_100 != 0) && (Number(this.nb_carton_10_controle_100) % 10) == 0) {
-          this.nb = 100
-          if (this.test_et_100 == 1) {
-            this.info = "OF : " + this.form.get('of')?.value + " ,agent: " + this.form.get('agent')?.value + ",Date : " + new Date().toLocaleString () + " , Qte : "+this.nb;
-            await this.delai(3000);
-            window.print()
-          }
-          this.nb = 0;
-          this.nb_carton_10_controle_100 = 0
-          this.nb_print_carton_100 = Number(this.nb_print_carton_100) + 1
 
-        }
         this.save_data_of()
+      }
+      if (this.test_redandance) {
+        Swal.fire({
+          text: 'Redondance',
+          icon: 'error',
+        })
+        this.form.controls['code'].enable();
+        this.form.controls["code"].setValue("");
+        this.ref_code.nativeElement.focus();
       }
     }
   }
@@ -388,7 +398,7 @@ export class WorkComponent implements OnInit {
       this.historique_of[i].nb_carton_10_controle_100 = this.nb_carton_10_controle_100;
       this.historique_of[i].nb_print_carton_10 = this.nb_print_carton_10
       this.historique_of[i].nb_print_carton_100 = this.nb_print_carton_100
-      localStorage.setItem('historique_of', JSON.stringify(this.historique_of));
+      localStorage.setItem('historique_of_dis', JSON.stringify(this.historique_of));
     }
   }
 
@@ -405,7 +415,7 @@ export class WorkComponent implements OnInit {
           this.test_agent = true;
           this.nom_agent = this.liste_agent[i].nom
           this.lock();
-          this.info = "OF : " + this.form.get('of')?.value + " ,agent: " + this.form.get('agent')?.value + ",Date : " + new Date().toLocaleString () + " , Qte : *" ;
+          this.info = "OF : " + this.form.get('of')?.value + " ,agent: " + this.form.get('agent')?.value + ",Date : " + new Date().toLocaleString() + " , Qte : *";
           Swal.fire({
             icon: 'success',
             title: 'agent',
@@ -499,7 +509,7 @@ export class WorkComponent implements OnInit {
   height: any = 21;
   width_qr: any = 90;
   a: any;
-   
+
   async slodee() {
     Swal.fire({
       title: " soldé  l'ordre de fabrication  ",
@@ -520,7 +530,7 @@ export class WorkComponent implements OnInit {
       if (result.isConfirmed) {
         if (this.a[0] == 'utilisateur') {
           this.liste_of[this.index_ordre_fabrication].etat = "soldé"
-          localStorage.setItem('liste_of', JSON.stringify(this.liste_of));
+          localStorage.setItem('liste_of_dis', JSON.stringify(this.liste_of));
           this.router.navigate(['/']);
         }
         else {
@@ -554,94 +564,93 @@ export class WorkComponent implements OnInit {
       let test = this.a[2] || this.a[3]
       if (result.isConfirmed) {
         if (this.a[0] == 'utilisateur') {
-            this.imprimer_slodee_traitement()
-          }
-          else {
-            Swal.fire({
-              title: 'Erreur ',
-              text: 'Vérifier vos données  ',
-              icon: 'warning',
-              confirmButtonText: 'ok',
-            })
-          }
+          this.imprimer_slodee_traitement()
         }
-      });
-} 
-
-async imprimer_slodee_traitement ()
-{
-  
-  if (this.nb > 0) {
-    this.info = "OF : " + this.form.get('of')?.value + " ,agent: " + this.form.get('agent')?.value + ",Date : " + new Date().toLocaleString () + " , Qte : "+this.nb;
-    await this.delai(400);
-    window.print()
-    let a = this.nb
-    this.nb = Number(this.nb_carton_10_controle_100) * 10 + Number(this.nb)
-    if (this.test_et_100 == 1) {
-      this.info = "OF : " + this.form.get('of')?.value + " ,agent: " + this.form.get('agent')?.value + ",Date : " + new Date().toLocaleString () + " , Qte : "+this.nb;
-      await this.delai(3000);
-      window.print()
-    }
-
-    this.liste_of[this.index_ordre_fabrication].etat = "soldé"
-    localStorage.setItem('liste_of', JSON.stringify(this.liste_of));
-    this.router.navigate(['/']);
+        else {
+          Swal.fire({
+            title: 'Erreur ',
+            text: 'Vérifier vos données  ',
+            icon: 'warning',
+            confirmButtonText: 'ok',
+          })
+        }
+      }
+    });
   }
-  else  if (this.nb == 0){
+
+  async imprimer_slodee_traitement() {
+
+    if (this.nb > 0) {
+      this.info = "OF : " + this.form.get('of')?.value + " ,agent: " + this.form.get('agent')?.value + ",Date : " + new Date().toLocaleString() + " , Qte : " + this.nb;
+      await this.delai(400);
+      window.print()
+      let a = this.nb
+      this.nb = Number(this.nb_carton_10_controle_100) * 10 + Number(this.nb)
+      if (this.test_et_100 == 1) {
+        this.info = "OF : " + this.form.get('of')?.value + " ,agent: " + this.form.get('agent')?.value + ",Date : " + new Date().toLocaleString() + " , Qte : " + this.nb;
+        await this.delai(3000);
+        window.print()
+      }
+
+      this.liste_of[this.index_ordre_fabrication].etat = "soldé"
+      localStorage.setItem('liste_of_dis', JSON.stringify(this.liste_of));
+      this.router.navigate(['/']);
+    }
+    else if (this.nb == 0) {
+      Swal.fire({
+        title: 'Erreur ',
+        icon: 'warning',
+        confirmButtonText: 'ok',
+      })
+    }
+  }
+
+  reset() {
     Swal.fire({
-      title: 'Erreur ', 
+      title: 'Êtes-vous sûr? ',
+      text: "Vous ne pourrez pas revenir en arrière !",
       icon: 'warning',
-      confirmButtonText: 'ok',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'oui'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.form.controls["code"].setValue("");
+        this.form.controls["of"].setValue("");
+        this.form.controls["agent"].setValue("");
+        this.val_resume = "";
+        this.val_des = "";
+        this.val_gamme = "";
+        this.val_qte_reg = "";
+        this.nb = 0
+        this.nb_carton_10 = 0
+        this.nb_carton_100 = 0
+        this.nb_carton_10_controle_100 = 0
+        this.nb_print_carton_10 = 0
+        this.nb_print_carton_100 = 0
+
+        Swal.fire(
+          'Réinitialiser!',
+          ' ',
+          'success'
+        )
+      }
     })
   }
-}
 
-reset() {
-  Swal.fire({
-    title: 'Êtes-vous sûr? ',
-    text: "Vous ne pourrez pas revenir en arrière !",
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#3085d6',
-    cancelButtonColor: '#d33',
-    confirmButtonText: 'oui'
-  }).then((result) => {
-    if (result.isConfirmed) {
-      this.form.controls["code"].setValue("");
-      this.form.controls["of"].setValue("");
-      this.form.controls["agent"].setValue("");
-      this.val_k = "";
-      this.val_w = "";
-      this.val_led = "";
-      this.val_e = "";
-      this.nb = 0
-      this.nb_carton_10 = 0
-      this.nb_carton_100 = 0
-      this.nb_carton_10_controle_100 = 0
-      this.nb_print_carton_10 = 0
-      this.nb_print_carton_100 = 0
+  sup_agent() {
+    this.form.controls["agent"].setValue("");
 
-      Swal.fire(
-        'Réinitialiser!',
-        ' ',
-        'success'
-      )
-    }
-  })
-}
-
-sup_agent() {
-  this.form.controls["agent"].setValue("");
-
-}
+  }
 
 
-sup_code() {
-  this.form.controls["code"].setValue("");
+  sup_code() {
+    this.form.controls["code"].setValue("");
 
-}
+  }
 
-sup_of() {
-  this.form.controls["of"].setValue("");
-}
+  sup_of() {
+    this.form.controls["of"].setValue("");
+  }
 }
