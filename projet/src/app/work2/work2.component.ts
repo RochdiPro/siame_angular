@@ -180,24 +180,31 @@ export class Work2Component implements OnInit {
   index_code_produit: any = -1
   test_correction_code: any = false
   test_redandance: any = false
+  result_type_dis:any=false;
+  v:any;
   async g_code(event: any) {
     if (event.key == "Enter") {
-      let ch = this.form.get('code')?.value
-      this.test_redandance = false;
-      for (let cpt = 0; cpt < this.liste_des_codes.length; cpt++) {
-        if (ch == this.liste_des_codes[cpt]) {
-          this.test_redandance = true
-        }
+      let ch = this.form.get('code')?.value      
+      this.result_type_dis = ch.startsWith("abc");
+      this.test_redandance = false; 
+      if( this.result_type_dis)
+      {
+         this.v = ch 
       }
-
-      this.liste_des_codes.push(ch)
-      let v = ch.split("_")[0]
+      else{
+        for (let cpt = 0; cpt < this.liste_des_codes.length; cpt++) {
+          if (ch == this.liste_des_codes[cpt]) {
+            this.test_redandance = true
+          }
+        }
+        this.v = ch.split("_")[0]
+      } 
       this.test_code = false
       this.test_code_produit = false
       let code = ""
       // chercher produit et get code fl 
       for (let i = 0; i < this.liste_produit.length; i++) {
-        if (this.liste_produit[i].code == v) {
+        if (this.liste_produit[i].code == this.v) {
           this.test_code_produit = true
           this.index_code_produit = i;
           code = this.liste_produit[i].code
@@ -260,7 +267,7 @@ export class Work2Component implements OnInit {
 
       } else {
         // message erreur code produit et code fl et code of
-        if (this.test_code == false ) {
+        if (this.test_code == false  && this.test_redandance==false ) {
 
           this.form.controls['code'].disable();
           this.test_correction_code = true
@@ -308,6 +315,8 @@ export class Work2Component implements OnInit {
 
       if (this.test_code == true && this.test_redandance==false) {
         this.value_code = this.form.get('code')?.value;
+        this.liste_des_codes.push(ch)
+
         if (Number(this.nb) < Number(this.qte_dis_empa)) {
           this.nb = Number(this.nb) + 1;
         }
@@ -332,6 +341,7 @@ export class Work2Component implements OnInit {
         this.form.controls["code"].setValue("");
         this.ref_code.nativeElement.focus();
       }
+    
     }
   }
 
