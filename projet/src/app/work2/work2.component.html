@@ -30,7 +30,7 @@
             height="50px" (click)="lock()">
 
           <mat-form-field class="custom-width" style="margin-left: 5%; width: 25%;">
-            <mat-label>Code à barres Produit</mat-label>
+            <mat-label>Code à barres ou bien QR</mat-label>
             <input matInput placeholder="code" [(ngModel)]="form.code" formControlName="code" #ref_code
               (keypress)="g_code($event)">
           </mat-form-field>
@@ -70,12 +70,12 @@
           <div id="printable" class=" row bc_image col-md-12"> 
             <svg width="400px" height="220px" viewBox="0 0 1000 300">
       
-              <text x="70" y="0" font-family="Verdana" font-size="70">  {{val_resume}} </text>
-              <text x="650" y="0" font-family="Verdana" font-size="70">   {{val_gamme}} </text>
-              <text x="290" y="230" font-family="Verdana" font-size="150" font-weight="bold" style="width: 100% ;text-align: center ;" >
+              <text x="70" y="0" font-family="Verdana" font-size="50">  {{val_resume}} </text>
+              <text x="550" y="0" font-family="Verdana" font-size="50">   {{val_gamme}} </text>
+              <text x="240" y="230" font-family="Verdana" font-size="120" font-weight="bold" style="width: 100% ;text-align: center ;" >
                   {{val_des}}
               </text>
-              <text x="650" y="390" font-family="Verdana" font-size="70">
+              <text x="650" y="390" font-family="Verdana" font-size="50">
                 Qté : {{nb}}
               </text>               
             </svg>

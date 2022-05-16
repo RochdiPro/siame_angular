@@ -31,6 +31,7 @@ export class Work2Component implements OnInit {
   val_des: any = ""
   historique_of: any = [];
   qte_dis_empa: any;
+  qte_dis_u: any;
   @ViewChild('ref_of', { static: false }) ref_of: any = MatInputModule;
   @ViewChild('ref_agent', { static: false }) ref_agent: any = MatInputModule;
   @ViewChild('ref_code', { static: false }) ref_code: any = MatInputModule;
@@ -180,25 +181,229 @@ export class Work2Component implements OnInit {
   index_code_produit: any = -1
   test_correction_code: any = false
   test_redandance: any = false
-  result_type_dis:any=false;
-  v:any;
+  result_type_dis: any = false;
+  v: any;
+  test_produit_redandance: any = false
   async g_code(event: any) {
     if (event.key == "Enter") {
-      let ch = this.form.get('code')?.value      
-      this.result_type_dis = ch.startsWith("abc");
-      this.test_redandance = false; 
-      if( this.result_type_dis)
-      {
-         this.v = ch 
+      let ch = this.form.get('code')?.value
+      this.result_type_dis = false
+      this.test_produit_redandance = false
+      if (ch.split("_").length == 3) { this.result_type_dis = true }
+      this.test_redandance = false;
+      if (this.result_type_dis == false) {
+        this.v = ch
+        for (let i = 0; i < this.liste_produit.length; i++) {
+          if (this.liste_produit[i].code_a_barre == this.v) {
+            this.v = this.liste_produit[i].code
+          }
+        }
       }
-      else{
+      else {
+        this.v = ch.split("_")[0]
+      }
+
+      let code = ""
+      // chercher produit et get code of et  code siame 
+      for (let i = 0; i < this.liste_produit.length; i++) {
+        if (this.liste_produit[i].code == this.v) {
+          this.test_code_produit = true
+          this.index_code_produit = i;
+          code = this.liste_produit[i].code
+          this.qte_dis_empa = this.liste_produit[i].qte_reg
+          this.qte_dis_u = this.liste_produit[i].qte_u
+          if (this.liste_produit[i].redandance + "" == "1") { this.test_produit_redandance = true }
+        }
+      }
+
+      // get true false if code fl ==  code empallage
+      for (let i = 0; i < this.liste_of.length; i++) {
+        if (this.liste_of[i].code == code) {
+          if (this.liste_of[i].code_of == this.form.get('of')?.value) {
+            this.test_code = true;
+            this.form.controls["code"].setValue("");
+          }
+        }
+      }
+      // message produit inconu 
+      if (this.test_code_produit == false) {
+
+        this.form.controls['code'].disable();
+        this.test_correction_code = true
+        Swal.fire({
+          icon: 'error',
+          title: " Produit Inconnu  ",
+          html:
+            '<table>' +
+            '<tr><td>Code </td><td> <input type="password" id="swal-input1" value="" class="swal2-input" style="    margin-left: 16%;"    ></td></tr>' +
+            '</table>',
+          focusConfirm: false,
+          preConfirm: () => {
+            return [(<HTMLInputElement>document.getElementById('swal-input1')).value,
+            ]
+          },
+          allowOutsideClick: () => !Swal.isLoading()
+        }).then((result) => {
+          this.a = result.value
+
+          let test = this.a[2] || this.a[3]
+          if (result.isConfirmed) {
+            if (this.a[0] == 'utilisateur') {
+              this.test_correction_code = false
+              this.form.controls["code"].setValue("");
+              this.form.controls['code'].enable();
+              this.ref_code.nativeElement.focus();
+
+            }
+            else {
+              Swal.fire({
+
+                text: 'Vérifier vos données',
+                imageUrl: './../assets/images/panne.png',
+                imageWidth: 400,
+                imageHeight: 400,
+
+              })
+            }
+          }
+        });
+
+      }
+      // message  test produit redandance
+      if (this.test_produit_redandance == true) {
+        for (let cpt = 0; cpt < this.liste_des_codes.length; cpt++) {
+          if (ch == this.liste_des_codes[cpt]) {
+            this.test_redandance = true
+          }
+        }
+        if (this.test_redandance) {
+          Swal.fire({
+            text: 'Redondance',
+            icon: 'error',
+          })
+          this.form.controls['code'].enable();
+          this.form.controls["code"].setValue("");
+          this.ref_code.nativeElement.focus();
+        }
+      }
+      // message erreur code produit et code fl et code of
+      if (this.test_code == false && this.test_redandance == false) {
+
+        this.form.controls['code'].disable();
+        this.test_correction_code = true
+        Swal.fire({
+          icon: 'error',
+          title: " l'ordre de fabrication et le code d'emballage ne correspondent pas  ",
+          html:
+            '<table>' +
+            '<tr><td>Code </td><td> <input type="password" id="swal-input1" value="" class="swal2-input" style="    margin-left: 16%;"    ></td></tr>' +
+            '</table>',
+          focusConfirm: false,
+          preConfirm: () => {
+            return [(<HTMLInputElement>document.getElementById('swal-input1')).value,
+            ]
+          },
+          allowOutsideClick: () => !Swal.isLoading()
+        }).then((result) => {
+          this.a = result.value
+
+          let test = this.a[2] || this.a[3]
+          if (result.isConfirmed) {
+            if (this.a[0] == 'utilisateur') {
+              this.test_correction_code = false
+              this.form.controls['code'].enable();
+              this.form.controls["code"].setValue("");
+
+              this.ref_code.nativeElement.focus();
+
+            }
+            else {
+
+              Swal.fire({
+                text: 'Vérifier vos données',
+                imageUrl: './../assets/images/panne.png',
+                imageWidth: 400,
+                imageHeight: 400,
+
+              })
+            }
+          }
+        });
+
+      }
+      // message erreur 
+      if (this.test_code == true && this.test_redandance == false) {
+        this.value_code = this.form.get('code')?.value;
+        this.liste_des_codes.push(ch)
+        if (this.qte_dis_u == 1) {
+          let n = this.nb;
+          this.info = "OF : " + this.form.get('of')?.value + " ,agent: " + this.form.get('agent')?.value + ",Date : " + new Date().toLocaleString() + " , Qte : 1";
+          this.nb = 1;
+          await this.delai(300);
+          window.print()
+          if (Number(this.nb) < Number(this.qte_dis_empa)) {
+            this.nb = Number(n) + 1;
+          }
+          if ((Number(this.nb) % Number(this.qte_dis_empa)) == 0) {
+            this.info = "OF : " + this.form.get('of')?.value + " ,agent: " + this.form.get('agent')?.value + ",Date : " + new Date().toLocaleString() + " , Qte : " + this.nb;
+            await this.delai(300);
+            window.print()
+            this.nb = 0;
+            this.nb_carton_10 = this.nb_carton_10 + 1
+            //this.nb_print_carton_10 = Number(this.nb_print_carton_10) + 1
+          }
+        }
+        else {
+          if (Number(this.nb) < Number(this.qte_dis_empa)) {
+            this.nb = Number(this.nb) + 1;
+          }
+          if ((Number(this.nb) % Number(this.qte_dis_empa)) == 0) {
+            this.info = "OF : " + this.form.get('of')?.value + " ,agent: " + this.form.get('agent')?.value + ",Date : " + new Date().toLocaleString() + " , Qte : " + this.nb;
+
+            await this.delai(200);
+            window.print()
+            this.nb = 0;
+            this.nb_carton_10 = this.nb_carton_10 + 1
+          }
+        }
+
+        this.save_data_of()
+      }
+
+      //   erreur traitemant
+      if (this.test_redandance) {
+        Swal.fire({
+          text: 'Redondance',
+          icon: 'error',
+        })
+        this.form.controls['code'].enable();
+        this.form.controls["code"].setValue("");
+        this.ref_code.nativeElement.focus();
+      }
+
+
+    }
+
+  }
+
+  async g_code1(event: any) {
+    if (event.key == "Enter") {
+      let ch = this.form.get('code')?.value
+      this.result_type_dis = ch.startsWith("FSB");
+      this.test_redandance = false;
+      if (this.result_type_dis == false) {
+        this.v = ch
+      }
+      else {
         for (let cpt = 0; cpt < this.liste_des_codes.length; cpt++) {
           if (ch == this.liste_des_codes[cpt]) {
             this.test_redandance = true
           }
         }
         this.v = ch.split("_")[0]
-      } 
+      }
+
+
       this.test_code = false
       this.test_code_produit = false
       let code = ""
@@ -209,6 +414,7 @@ export class Work2Component implements OnInit {
           this.index_code_produit = i;
           code = this.liste_produit[i].code
           this.qte_dis_empa = this.liste_produit[i].qte_reg
+          this.qte_dis_u = this.liste_produit[i].qte_u
         }
       }
 
@@ -267,7 +473,7 @@ export class Work2Component implements OnInit {
 
       } else {
         // message erreur code produit et code fl et code of
-        if (this.test_code == false  && this.test_redandance==false ) {
+        if (this.test_code == false && this.test_redandance == false) {
 
           this.form.controls['code'].disable();
           this.test_correction_code = true
@@ -313,21 +519,40 @@ export class Work2Component implements OnInit {
         }
       }
 
-      if (this.test_code == true && this.test_redandance==false) {
+      if (this.test_code == true && this.test_redandance == false) {
         this.value_code = this.form.get('code')?.value;
         this.liste_des_codes.push(ch)
-
-        if (Number(this.nb) < Number(this.qte_dis_empa)) {
-          this.nb = Number(this.nb) + 1;
-        }
-        if ((Number(this.nb) % Number(this.qte_dis_empa)) == 0) {
-          this.info = "OF : " + this.form.get('of')?.value + " ,agent: " + this.form.get('agent')?.value + ",Date : " + new Date().toLocaleString() + " , Qte : " + this.nb;
-
-          await this.delai(200);
+        if (this.qte_dis_u == 1) {
+          let n = this.nb;
+          this.info = "OF : " + this.form.get('of')?.value + " ,agent: " + this.form.get('agent')?.value + ",Date : " + new Date().toLocaleString() + " , Qte : 1";
+          this.nb = 1;
+          await this.delai(300);
           window.print()
-          this.nb = 0;
-          this.nb_carton_10 = this.nb_carton_10 + 1
-          //this.nb_print_carton_10 = Number(this.nb_print_carton_10) + 1
+          if (Number(this.nb) < Number(this.qte_dis_empa)) {
+            this.nb = Number(n) + 1;
+          }
+          if ((Number(this.nb) % Number(this.qte_dis_empa)) == 0) {
+            this.info = "OF : " + this.form.get('of')?.value + " ,agent: " + this.form.get('agent')?.value + ",Date : " + new Date().toLocaleString() + " , Qte : " + this.nb;
+            await this.delai(300);
+            window.print()
+            this.nb = 0;
+            this.nb_carton_10 = this.nb_carton_10 + 1
+            //this.nb_print_carton_10 = Number(this.nb_print_carton_10) + 1
+          }
+        }
+        else {
+          if (Number(this.nb) < Number(this.qte_dis_empa)) {
+            this.nb = Number(this.nb) + 1;
+          }
+          if ((Number(this.nb) % Number(this.qte_dis_empa)) == 0) {
+            this.info = "OF : " + this.form.get('of')?.value + " ,agent: " + this.form.get('agent')?.value + ",Date : " + new Date().toLocaleString() + " , Qte : " + this.nb;
+
+            await this.delai(200);
+            window.print()
+            this.nb = 0;
+            this.nb_carton_10 = this.nb_carton_10 + 1
+            //this.nb_print_carton_10 = Number(this.nb_print_carton_10) + 1
+          }
         }
 
         this.save_data_of()
@@ -341,10 +566,9 @@ export class Work2Component implements OnInit {
         this.form.controls["code"].setValue("");
         this.ref_code.nativeElement.focus();
       }
-    
+
     }
   }
-
 
   correction_code() {
     Swal.fire({
