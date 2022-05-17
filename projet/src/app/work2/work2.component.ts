@@ -71,10 +71,11 @@ export class Work2Component implements OnInit {
   index_ordre_fabrication: any;
   test_et_100: any;
   test_fermer: any = false
+  v: any;
   set_of(event: any) {
 
     if (event.key == "Enter") {
-      let v = this.form.get('of')?.value
+      this.v = this.form.get('of')?.value
       this.test_of = false
       this.test_fermer = false;
       this.nb = 0
@@ -85,8 +86,7 @@ export class Work2Component implements OnInit {
       this.nb_print_carton_100 = 0
       for (let i = 0; i < this.liste_of.length; i++) {
 
-        if (this.liste_of[i].code_of == v) {
-
+        if (this.liste_of[i].code_of == this.v) {
           if (this.liste_of[i].etat == "lancé") {
             this.test_of = true;
             this.index_ordre_fabrication = i;
@@ -99,8 +99,7 @@ export class Work2Component implements OnInit {
             })
             this.ref_agent.nativeElement.focus();
             this.form.controls['of'].disable();
-
-
+            this.getdata_of()
           }
           else {
             this.form.controls["of"].setValue("");
@@ -122,52 +121,53 @@ export class Work2Component implements OnInit {
           text: 'Ordre de fabrication Inconnu ',
         })
       }
-      else {
 
-        let test_historique_of = false;
-        if (this.historique_of == null) {
-          this.historique_of = []
-        }
-        for (let i = 0; i < this.historique_of.length; i++) {
-          if (this.historique_of[i].of == v) {
-            test_historique_of = true;
-            this.nb = this.historique_of[i].nb
-            this.nb_carton_10 = this.historique_of[i].nb_carton_10;
-            this.nb_carton_100 = this.historique_of[i].nb_carton_100;
-            this.nb_carton_10_controle_100 = this.historique_of[i].nb_carton_10_controle_100
-            this.nb_print_carton_10 = this.historique_of[i].nb_print_carton_10
-            this.nb_print_carton_100 = this.historique_of[i].nb_print_carton_100
-          }
-        }
-        if (test_historique_of == false) {
-          this.obj = {}
-          this.obj.of = v;
-          this.obj.nb = this.nb;
-          this.obj.nb_carton_10 = this.nb_carton_10;
-          this.obj.nb_carton_100 = this.nb_carton_100;
-          this.obj.nb_carton_10_controle_100 = this.nb_carton_10_controle_100;
-          this.obj.nb_print_carton_10 = this.nb_print_carton_10
-          this.obj.nb_print_carton_100 = this.nb_print_carton_100
-          this.historique_of.push(this.obj)
-        }
-        localStorage.setItem('historique_of_dis', JSON.stringify(this.historique_of));
+    }
+  }
 
-        for (let i = 0; i < this.liste_produit.length; i++) {
-          if (this.liste_produit[i].code == this.liste_of[this.index_ordre_fabrication].code) {
-            this.test_code_produit = true
-            let c = this.liste_produit[i].code
-            this.value_code = c;
-            this.val_resume = this.liste_produit[i].resume
-            this.val_gamme = this.liste_produit[i].gamme.trim()
-            this.val_des = this.liste_produit[i].des
-            this.val_qte_reg = this.liste_produit[i].qte_reg
+  getdata_of() {
+    let test_historique_of = false;
+    if (this.historique_of == null) {
+      this.historique_of = []
+    }
+    for (let i = 0; i < this.historique_of.length; i++) {
+      if (this.historique_of[i].of == this.v) {
+        test_historique_of = true;
+        this.nb = this.historique_of[i].nb
+        this.nb_carton_10 = this.historique_of[i].nb_carton_10;
+        this.nb_carton_100 = this.historique_of[i].nb_carton_100;
+        this.nb_carton_10_controle_100 = this.historique_of[i].nb_carton_10_controle_100
+        this.nb_print_carton_10 = this.historique_of[i].nb_print_carton_10
+        this.nb_print_carton_100 = this.historique_of[i].nb_print_carton_100
+      }
+    }
+    if (test_historique_of == false) {
+      this.obj = {}
+      this.obj.of = this.v;
+      this.obj.nb = this.nb;
+      this.obj.nb_carton_10 = this.nb_carton_10;
+      this.obj.nb_carton_100 = this.nb_carton_100;
+      this.obj.nb_carton_10_controle_100 = this.nb_carton_10_controle_100;
+      this.obj.nb_print_carton_10 = this.nb_print_carton_10
+      this.obj.nb_print_carton_100 = this.nb_print_carton_100
+      this.historique_of.push(this.obj)
+    }
+    localStorage.setItem('historique_of_dis', JSON.stringify(this.historique_of));
 
-          }
-        }
-        this.info = "OF : " + this.form.get('of')?.value + " ,agent: " + this.form.get('agent')?.value + ",Date : " + new Date().toLocaleString() + " , Qte : " + this.nb;
+    for (let i = 0; i < this.liste_produit.length; i++) {
+      if (this.liste_produit[i].code == this.liste_of[this.index_ordre_fabrication].code) {
+        this.test_code_produit = true
+        let c = this.liste_produit[i].code
+        this.value_code = c;
+        this.val_resume = this.liste_produit[i].resume
+        this.val_gamme = this.liste_produit[i].gamme.trim()
+        this.val_des = this.liste_produit[i].des
+        this.val_qte_reg = this.liste_produit[i].qte_reg
 
       }
     }
+    this.info = "OF : " + this.form.get('of')?.value + " ,agent: " + this.form.get('agent')?.value + ",Date : " + new Date().toLocaleString() + " , Qte : " + this.nb;
+
   }
 
   ngOnInit(): void {
@@ -182,20 +182,27 @@ export class Work2Component implements OnInit {
   test_correction_code: any = false
   test_redandance: any = false
   result_type_dis: any = false;
-  v: any;
   test_produit_redandance: any = false
+  lancer_pb: any = false
   async g_code(event: any) {
     if (event.key == "Enter") {
       let ch = this.form.get('code')?.value
       this.result_type_dis = false
       this.test_produit_redandance = false
+      this.test_code_produit = false
+      this.test_code = false
+      this.lancer_pb = false
       if (ch.split("_").length == 3) { this.result_type_dis = true }
       this.test_redandance = false;
       if (this.result_type_dis == false) {
         this.v = ch
         for (let i = 0; i < this.liste_produit.length; i++) {
           if (this.liste_produit[i].code_a_barre == this.v) {
-            this.v = this.liste_produit[i].code
+            for (let j = 0; j < this.liste_of.length; j++) {
+              if (this.liste_produit[i].code == this.liste_of[j].code && this.liste_of[j].etat == "lancé") {
+                this.v = this.liste_produit[i].code
+              }
+            }
           }
         }
       }
@@ -212,24 +219,16 @@ export class Work2Component implements OnInit {
           code = this.liste_produit[i].code
           this.qte_dis_empa = this.liste_produit[i].qte_reg
           this.qte_dis_u = this.liste_produit[i].qte_u
-          if (this.liste_produit[i].redandance + "" == "1") { this.test_produit_redandance = true }
+          if (this.liste_produit[i].redandance + "" == "0") { this.test_produit_redandance = true }
         }
       }
 
-      // get true false if code fl ==  code empallage
-      for (let i = 0; i < this.liste_of.length; i++) {
-        if (this.liste_of[i].code == code) {
-          if (this.liste_of[i].code_of == this.form.get('of')?.value) {
-            this.test_code = true;
-            this.form.controls["code"].setValue("");
-          }
-        }
-      }
       // message produit inconu 
       if (this.test_code_produit == false) {
 
         this.form.controls['code'].disable();
         this.test_correction_code = true
+        this.lancer_pb=true 
         Swal.fire({
           icon: 'error',
           title: " Produit Inconnu  ",
@@ -264,33 +263,30 @@ export class Work2Component implements OnInit {
                 imageHeight: 400,
 
               })
-            }
+             }
           }
         });
 
       }
-      // message  test produit redandance
-      if (this.test_produit_redandance == true) {
-        for (let cpt = 0; cpt < this.liste_des_codes.length; cpt++) {
-          if (ch == this.liste_des_codes[cpt]) {
-            this.test_redandance = true
+      else {
+        // get true false if code fl ==  code empallage
+        for (let i = 0; i < this.liste_of.length; i++) {
+          if (this.liste_of[i].code == code) {
+            if (this.liste_of[i].code_of == this.form.get('of')?.value && this.liste_of[i].etat == "lancé") {
+              this.test_code = true;
+              this.form.controls["code"].setValue("");
+            }
           }
         }
-        if (this.test_redandance) {
-          Swal.fire({
-            text: 'Redondance',
-            icon: 'error',
-          })
-          this.form.controls['code'].enable();
-          this.form.controls["code"].setValue("");
-          this.ref_code.nativeElement.focus();
-        }
       }
-      // message erreur code produit et code fl et code of
-      if (this.test_code == false && this.test_redandance == false) {
 
+      
+      // message erreur code produit et code fl et code of
+      if (this.test_code == false && this.test_redandance == false && this.lancer_pb == false) {
         this.form.controls['code'].disable();
         this.test_correction_code = true
+        this.lancer_pb=true
+
         Swal.fire({
           icon: 'error',
           title: " l'ordre de fabrication et le code d'emballage ne correspondent pas  ",
@@ -331,195 +327,34 @@ export class Work2Component implements OnInit {
         });
 
       }
-      // message erreur 
-      if (this.test_code == true && this.test_redandance == false) {
-        this.value_code = this.form.get('code')?.value;
-        this.liste_des_codes.push(ch)
-        if (this.qte_dis_u == 1) {
-          let n = this.nb;
-          this.info = "OF : " + this.form.get('of')?.value + " ,agent: " + this.form.get('agent')?.value + ",Date : " + new Date().toLocaleString() + " , Qte : 1";
-          this.nb = 1;
-          await this.delai(300);
-          window.print()
-          if (Number(this.nb) < Number(this.qte_dis_empa)) {
-            this.nb = Number(n) + 1;
-          }
-          if ((Number(this.nb) % Number(this.qte_dis_empa)) == 0) {
-            this.info = "OF : " + this.form.get('of')?.value + " ,agent: " + this.form.get('agent')?.value + ",Date : " + new Date().toLocaleString() + " , Qte : " + this.nb;
-            await this.delai(300);
-            window.print()
-            this.nb = 0;
-            this.nb_carton_10 = this.nb_carton_10 + 1
-            //this.nb_print_carton_10 = Number(this.nb_print_carton_10) + 1
-          }
-        }
-        else {
-          if (Number(this.nb) < Number(this.qte_dis_empa)) {
-            this.nb = Number(this.nb) + 1;
-          }
-          if ((Number(this.nb) % Number(this.qte_dis_empa)) == 0) {
-            this.info = "OF : " + this.form.get('of')?.value + " ,agent: " + this.form.get('agent')?.value + ",Date : " + new Date().toLocaleString() + " , Qte : " + this.nb;
 
-            await this.delai(200);
-            window.print()
-            this.nb = 0;
-            this.nb_carton_10 = this.nb_carton_10 + 1
-          }
-        }
-
-        this.save_data_of()
-      }
-
-      //   erreur traitemant
-      if (this.test_redandance) {
-        Swal.fire({
-          text: 'Redondance',
-          icon: 'error',
-        })
-        this.form.controls['code'].enable();
-        this.form.controls["code"].setValue("");
-        this.ref_code.nativeElement.focus();
-      }
-
-
-    }
-
-  }
-
-  async g_code1(event: any) {
-    if (event.key == "Enter") {
-      let ch = this.form.get('code')?.value
-      this.result_type_dis = ch.startsWith("FSB");
-      this.test_redandance = false;
-      if (this.result_type_dis == false) {
-        this.v = ch
-      }
-      else {
+      //  test produit redandance
+      else if (this.test_produit_redandance == true && this.test_code_produit == true && this.lancer_pb == false) {
         for (let cpt = 0; cpt < this.liste_des_codes.length; cpt++) {
           if (ch == this.liste_des_codes[cpt]) {
             this.test_redandance = true
           }
         }
-        this.v = ch.split("_")[0]
-      }
-
-
-      this.test_code = false
-      this.test_code_produit = false
-      let code = ""
-      // chercher produit et get code fl 
-      for (let i = 0; i < this.liste_produit.length; i++) {
-        if (this.liste_produit[i].code == this.v) {
-          this.test_code_produit = true
-          this.index_code_produit = i;
-          code = this.liste_produit[i].code
-          this.qte_dis_empa = this.liste_produit[i].qte_reg
-          this.qte_dis_u = this.liste_produit[i].qte_u
-        }
-      }
-
-      // get true false if code fl ==  code empallage
-      for (let i = 0; i < this.liste_of.length; i++) {
-        if (this.liste_of[i].code == code) {
-          if (this.liste_of[i].code_of == this.form.get('of')?.value) {
-            this.test_code = true;
-            this.form.controls["code"].setValue("");
-          }
-        }
-      }
-
-      // message produit inconu 
-      if (this.test_code_produit == false) {
-
-        this.form.controls['code'].disable();
-        this.test_correction_code = true
-        Swal.fire({
-          icon: 'error',
-          title: " Produit Inconnu  ",
-          html:
-            '<table>' +
-            '<tr><td>Code </td><td> <input type="password" id="swal-input1" value="" class="swal2-input" style="    margin-left: 16%;"    ></td></tr>' +
-            '</table>',
-          focusConfirm: false,
-          preConfirm: () => {
-            return [(<HTMLInputElement>document.getElementById('swal-input1')).value,
-            ]
-          },
-          allowOutsideClick: () => !Swal.isLoading()
-        }).then((result) => {
-          this.a = result.value
-
-          let test = this.a[2] || this.a[3]
-          if (result.isConfirmed) {
-            if (this.a[0] == 'utilisateur') {
-              this.test_correction_code = false
-              this.form.controls["code"].setValue("");
-              this.form.controls['code'].enable();
-              this.ref_code.nativeElement.focus();
-
-            }
-            else {
-              Swal.fire({
-
-                text: 'Vérifier vos données',
-                imageUrl: './../assets/images/panne.png',
-                imageWidth: 400,
-                imageHeight: 400,
-
-              })
-            }
-          }
-        });
-
-      } else {
-        // message erreur code produit et code fl et code of
-        if (this.test_code == false && this.test_redandance == false) {
-
-          this.form.controls['code'].disable();
-          this.test_correction_code = true
+        if (this.test_redandance) {
           Swal.fire({
+            text: 'Redondance',
             icon: 'error',
-            title: " l'ordre de fabrication et le code d'emballage ne correspondent pas  ",
-            html:
-              '<table>' +
-              '<tr><td>Code </td><td> <input type="password" id="swal-input1" value="" class="swal2-input" style="    margin-left: 16%;"    ></td></tr>' +
-              '</table>',
-            focusConfirm: false,
-            preConfirm: () => {
-              return [(<HTMLInputElement>document.getElementById('swal-input1')).value,
-              ]
-            },
-            allowOutsideClick: () => !Swal.isLoading()
-          }).then((result) => {
-            this.a = result.value
-
-            let test = this.a[2] || this.a[3]
-            if (result.isConfirmed) {
-              if (this.a[0] == 'utilisateur') {
-                this.test_correction_code = false
-                this.form.controls['code'].enable();
-                this.form.controls["code"].setValue("");
-
-                this.ref_code.nativeElement.focus();
-
-              }
-              else {
-
-                Swal.fire({
-                  text: 'Vérifier vos données',
-                  imageUrl: './../assets/images/panne.png',
-                  imageWidth: 400,
-                  imageHeight: 400,
-
-                })
-              }
-            }
-          });
+          })
+          this.form.controls['code'].enable();
+          this.form.controls["code"].setValue("");
+          this.ref_code.nativeElement.focus();
+          this.lancer_pb = true
+        }
+        else {
+          this.liste_des_codes.push(ch)
 
         }
       }
 
-      if (this.test_code == true && this.test_redandance == false) {
+
+      // tous est bien ajouter data 
+      if (this.test_code == true && this.test_redandance == false && this.lancer_pb == false) {
+
         this.value_code = this.form.get('code')?.value;
         this.liste_des_codes.push(ch)
         if (this.qte_dis_u == 1) {
@@ -537,7 +372,6 @@ export class Work2Component implements OnInit {
             window.print()
             this.nb = 0;
             this.nb_carton_10 = this.nb_carton_10 + 1
-            //this.nb_print_carton_10 = Number(this.nb_print_carton_10) + 1
           }
         }
         else {
@@ -551,24 +385,17 @@ export class Work2Component implements OnInit {
             window.print()
             this.nb = 0;
             this.nb_carton_10 = this.nb_carton_10 + 1
-            //this.nb_print_carton_10 = Number(this.nb_print_carton_10) + 1
           }
         }
 
         this.save_data_of()
       }
-      if (this.test_redandance) {
-        Swal.fire({
-          text: 'Redondance',
-          icon: 'error',
-        })
-        this.form.controls['code'].enable();
-        this.form.controls["code"].setValue("");
-        this.ref_code.nativeElement.focus();
-      }
+
 
     }
   }
+
+
 
   correction_code() {
     Swal.fire({
@@ -818,14 +645,6 @@ export class Work2Component implements OnInit {
       this.info = "OF : " + this.form.get('of')?.value + " ,agent: " + this.form.get('agent')?.value + ",Date : " + new Date().toLocaleString() + " , Qte : " + this.nb;
       await this.delai(400);
       window.print()
-      let a = this.nb
-      this.nb = Number(this.nb_carton_10_controle_100) * 10 + Number(this.nb)
-      if (this.test_et_100 == 1) {
-        this.info = "OF : " + this.form.get('of')?.value + " ,agent: " + this.form.get('agent')?.value + ",Date : " + new Date().toLocaleString() + " , Qte : " + this.nb;
-        await this.delai(3000);
-        window.print()
-      }
-
       this.liste_of[this.index_ordre_fabrication].etat = "soldé"
       localStorage.setItem('liste_of_dis', JSON.stringify(this.liste_of));
       this.router.navigate(['/']);
