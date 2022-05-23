@@ -71,20 +71,20 @@ export class Config2Component implements OnInit {
         let t2 = t[i].split(",");
         this.obj = {}
         this.obj.code_a_barre = t2[0]
-        this.obj.code = t2[1]
-        this.obj.resume = t2[2]
-        this.obj.gamme = t2[3]
-        this.obj.des = t2[4]
-        this.obj.qte_u = t2[5]
-        this.obj.qte_reg = t2[6]  
-        this.obj.redandance = t2[7]  
+        this.obj.code_a_barre2 = t2[1]
+        this.obj.code = t2[2]
+        this.obj.resume = t2[3]
+        this.obj.gamme = t2[4]
+        this.obj.des = t2[5]
+        this.obj.qte_u = t2[6]
+        this.obj.qte_reg = t2[7]  
+        this.obj.redandance = t2[8]  
          if (this.obj.codefl != undefined  || this.obj.codefl != " "  )  { 
           this.liste_produit.push(this.obj) 
         }
       }
       localStorage.setItem('liste_produit_dis', JSON.stringify(this.liste_produit));
-      console.log(this.liste_produit)
-
+ 
     }
     fileReader.readAsText(file);
   }
