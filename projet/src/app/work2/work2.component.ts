@@ -192,7 +192,7 @@ export class Work2Component implements OnInit {
   liste_produit_siame = [];
   lire_2_code_a_barre: any = 0;
   code_a_barre_en_attente: any = null;
-   le_2_test_code_barre: any = false;
+  le_2_test_code_barre: any = false;
   a: any;
   test_produit_inconnu: any = false;
   test_produit_redondance: any = false;
@@ -255,6 +255,7 @@ export class Work2Component implements OnInit {
 
       else {
         let code_siame = ""
+        let type = ""
         //chercher code a barre produit dans la liste des produit code 1 ou bien code 2           
         for (let i = 0; i < this.liste_produit.length; i++) {
           if (this.liste_produit[i].code_a_barre == ch || this.liste_produit[i].code_a_barre2 == ch) {
@@ -267,7 +268,7 @@ export class Work2Component implements OnInit {
 
         // chercher la correspondance produit of  code a barre 1  et code 2 si le cas 
         if (this.test_produit_inconnu == true) {
-          let type = "complexe"
+          type = "complexe"
           for (let i = 0; i < this.liste_produit.length; i++) { 
             if (this.liste_produit[i].code_a_barre == ch && this.liste_produit[i].code_a_barre2 == "null") {
               code_siame = this.liste_produit[i].code
@@ -304,230 +305,230 @@ export class Work2Component implements OnInit {
             }
           }
         }
-
         
         if (this.test_produit_inconnu == true && this.test_produit_correspondance == false) { this.erreur_produit_correspondance_produit_of() ;this.code_a_barre_en_attente = null  }  
         // fait le traitement si tout est correct 
-        if (this.test_produit_inconnu == true && this.test_produit_correspondance == true) {
+        if (this.test_produit_inconnu == true && (this.test_produit_correspondance == true || type =="simple")  ) {
           this.traitement(ch)
         }
 
       }
     }
   }
-  async g_code1(event: any) {
-    if (event.key == "Enter") {
-      let ch = this.form.get('code')?.value
-      this.result_type_dis = false
-      this.test_produit_redandance = false
-      this.test_code_produit = false
-      this.test_code = false
-      this.lancer_pb = false
-      if (ch.split("_").length == 3) { this.result_type_dis = true }
-      this.test_redandance = false;
-      if (this.result_type_dis == false) {
-        this.v = ch
-        for (let i = 0; i < this.liste_produit.length; i++) {
-          if (this.liste_produit[i].code_a_barre == this.v) {
-            for (let j = 0; j < this.liste_of.length; j++) {
-              if (this.liste_produit[i].code == this.liste_of[j].code && this.liste_of[j].etat == "lancé") {
-                this.v = this.liste_produit[i].code
-              }
-            }
-          }
-        }
-      }
-      else {
-        this.v = ch.split("_")[0]
-      }
+  // async g_code1(event: any) {
+  //   if (event.key == "Enter") {
+  //     let ch = this.form.get('code')?.value
+  //     this.result_type_dis = false
+  //     this.test_produit_redandance = false
+  //     this.test_code_produit = false
+  //     this.test_code = false
+  //     this.lancer_pb = false
+  //     if (ch.split("_").length == 3) { this.result_type_dis = true }
+  //     this.test_redandance = false;
+  //     if (this.result_type_dis == false) {
+  //       this.v = ch
+  //       for (let i = 0; i < this.liste_produit.length; i++) {
+  //         if (this.liste_produit[i].code_a_barre == this.v) {
+  //           for (let j = 0; j < this.liste_of.length; j++) {
+  //             if (this.liste_produit[i].code == this.liste_of[j].code && this.liste_of[j].etat == "lancé") {
+  //               this.v = this.liste_produit[i].code
+  //             }
+  //           }
+  //         }
+  //       }
+  //     }
+  //     else {
+  //       this.v = ch.split("_")[0]
+  //     }
 
-      let code = ""
-      // chercher produit et get code of et  code siame 
-      for (let i = 0; i < this.liste_produit.length; i++) {
-        if (this.liste_produit[i].code == this.v) {
-          this.test_code_produit = true
-          this.index_code_produit = i;
-          code = this.liste_produit[i].code
-          this.qte_dis_empa = this.liste_produit[i].qte_reg
-          this.qte_dis_u = this.liste_produit[i].qte_u
-          if (this.liste_produit[i].redandance + "" == "0") { this.test_produit_redandance = true }
-        }
-      }
+  //     let code = ""
+  //     // chercher produit et get code of et  code siame 
+  //     for (let i = 0; i < this.liste_produit.length; i++) {
+  //       if (this.liste_produit[i].code == this.v) {
+  //         this.test_code_produit = true
+  //         this.index_code_produit = i;
+  //         code = this.liste_produit[i].code
+  //         this.qte_dis_empa = this.liste_produit[i].qte_reg
+  //         this.qte_dis_u = this.liste_produit[i].qte_u
+  //         if (this.liste_produit[i].redandance + "" == "0") { this.test_produit_redandance = true }
+  //       }
+  //     }
 
-      // message produit inconu 
-      if (this.test_code_produit == false) {
+  //     // message produit inconu 
+  //     if (this.test_code_produit == false) {
 
-        this.form.controls['code'].disable();
-        this.test_correction_code = true
-        this.lancer_pb = true
-        Swal.fire({
-          icon: 'error',
-          title: " Produit Inconnu  ",
-          html:
-            '<table>' +
-            '<tr><td>Code </td><td> <input type="password" id="swal-input1" value="" class="swal2-input" style="    margin-left: 16%;"    ></td></tr>' +
-            '</table>',
-          focusConfirm: false,
-          preConfirm: () => {
-            return [(<HTMLInputElement>document.getElementById('swal-input1')).value,
-            ]
-          },
-          allowOutsideClick: () => !Swal.isLoading()
-        }).then((result) => {
-          this.a = result.value
+  //       this.form.controls['code'].disable();
+  //       this.test_correction_code = true
+  //       this.lancer_pb = true
+  //       Swal.fire({
+  //         icon: 'error',
+  //         title: " Produit Inconnu  ",
+  //         html:
+  //           '<table>' +
+  //           '<tr><td>Code </td><td> <input type="password" id="swal-input1" value="" class="swal2-input" style="    margin-left: 16%;"    ></td></tr>' +
+  //           '</table>',
+  //         focusConfirm: false,
+  //         preConfirm: () => {
+  //           return [(<HTMLInputElement>document.getElementById('swal-input1')).value,
+  //           ]
+  //         },
+  //         allowOutsideClick: () => !Swal.isLoading()
+  //       }).then((result) => {
+  //         this.a = result.value
 
-          let test = this.a[2] || this.a[3]
-          if (result.isConfirmed) {
-            if (this.a[0] == 'utilisateur') {
-              this.test_correction_code = false
-              this.form.controls["code"].setValue("");
-              this.form.controls['code'].enable();
-              this.ref_code.nativeElement.focus();
+  //         let test = this.a[2] || this.a[3]
+  //         if (result.isConfirmed) {
+  //           if (this.a[0] == 'utilisateur') {
+  //             this.test_correction_code = false
+  //             this.form.controls["code"].setValue("");
+  //             this.form.controls['code'].enable();
+  //             this.ref_code.nativeElement.focus();
 
-            }
-            else {
-              Swal.fire({
+  //           }
+  //           else {
+  //             Swal.fire({
 
-                text: 'Vérifier vos données',
-                imageUrl: './../assets/images/panne.png',
-                imageWidth: 400,
-                imageHeight: 400,
+  //               text: 'Vérifier vos données',
+  //               imageUrl: './../assets/images/panne.png',
+  //               imageWidth: 400,
+  //               imageHeight: 400,
 
-              })
-            }
-          }
-        });
+  //             })
+  //           }
+  //         }
+  //       });
 
-      }
-      else {
-        // get true false if code fl ==  code empallage
-        for (let i = 0; i < this.liste_of.length; i++) {
-          if (this.liste_of[i].code == code) {
-            if (this.liste_of[i].code_of == this.form.get('of')?.value && this.liste_of[i].etat == "lancé") {
-              this.test_code = true;
-              this.form.controls["code"].setValue("");
-            }
-          }
-        }
-      }
-
-
-      // message erreur code produit et code fl et code of
-      if (this.test_code == false && this.test_redandance == false && this.lancer_pb == false) {
-        this.form.controls['code'].disable();
-        this.test_correction_code = true
-        this.lancer_pb = true
-
-        Swal.fire({
-          icon: 'error',
-          title: " l'ordre de fabrication et le code d'emballage ne correspondent pas  ",
-          html:
-            '<table>' +
-            '<tr><td>Code </td><td> <input type="password" id="swal-input1" value="" class="swal2-input" style="    margin-left: 16%;"    ></td></tr>' +
-            '</table>',
-          focusConfirm: false,
-          preConfirm: () => {
-            return [(<HTMLInputElement>document.getElementById('swal-input1')).value,
-            ]
-          },
-          allowOutsideClick: () => !Swal.isLoading()
-        }).then((result) => {
-          this.a = result.value
-
-          let test = this.a[2] || this.a[3]
-          if (result.isConfirmed) {
-            if (this.a[0] == 'utilisateur') {
-              this.test_correction_code = false
-              this.form.controls['code'].enable();
-              this.form.controls["code"].setValue("");
-
-              this.ref_code.nativeElement.focus();
-
-            }
-            else {
-
-              Swal.fire({
-                text: 'Vérifier vos données',
-                imageUrl: './../assets/images/panne.png',
-                imageWidth: 400,
-                imageHeight: 400,
-
-              })
-            }
-          }
-        });
-
-      }
-
-      //  test produit redandance
-      else if (this.test_produit_redandance == true && this.test_code_produit == true && this.lancer_pb == false) {
-        for (let cpt = 0; cpt < this.liste_des_codes.length; cpt++) {
-          if (ch == this.liste_des_codes[cpt]) {
-            this.test_redandance = true
-          }
-        }
-        if (this.test_redandance) {
-          Swal.fire({
-            text: 'Redondance',
-            icon: 'error',
-          })
-          this.form.controls['code'].enable();
-          this.form.controls["code"].setValue("");
-          this.ref_code.nativeElement.focus();
-          this.lancer_pb = true
-        }
-        else {
-          this.liste_des_codes.push(ch)
-
-        }
-      }
+  //     }
+  //     else {
+  //       // get true false if code fl ==  code empallage
+  //       for (let i = 0; i < this.liste_of.length; i++) {
+  //         if (this.liste_of[i].code == code) {
+  //           if (this.liste_of[i].code_of == this.form.get('of')?.value && this.liste_of[i].etat == "lancé") {
+  //             this.test_code = true;
+  //             this.form.controls["code"].setValue("");
+  //           }
+  //         }
+  //       }
+  //     }
 
 
-      // tous est bien ajouter data 
-      if (this.test_code == true && this.test_redandance == false && this.lancer_pb == false) {
+  //     // message erreur code produit et code fl et code of
+  //     if (this.test_code == false && this.test_redandance == false && this.lancer_pb == false) {
+  //       this.form.controls['code'].disable();
+  //       this.test_correction_code = true
+  //       this.lancer_pb = true
 
-        this.value_code = this.form.get('code')?.value;
-        this.liste_des_codes.push(ch)
-        if (this.qte_dis_u == 1) {
-          let n = this.nb;
-          this.info = "OF : " + this.form.get('of')?.value + " ,agent: " + this.form.get('agent')?.value + ",Date : " + new Date().toLocaleString() + " , Qte : 1";
-          this.nb = 1;
-          await this.delai(300);
-          window.print()
-          if (Number(this.nb) < Number(this.qte_dis_empa)) {
-            this.nb = Number(n) + 1;
-          }
-          if ((Number(this.nb) % Number(this.qte_dis_empa)) == 0) {
-            this.info = "OF : " + this.form.get('of')?.value + " ,agent: " + this.form.get('agent')?.value + ",Date : " + new Date().toLocaleString() + " , Qte : " + this.nb;
-            await this.delai(300);
-            window.print()
-            this.nb = 0;
-            this.nb_carton_10 = this.nb_carton_10 + 1
-          }
-        }
-        else {
-          if (Number(this.nb) < Number(this.qte_dis_empa)) {
-            this.nb = Number(this.nb) + 1;
-          }
-          if ((Number(this.nb) % Number(this.qte_dis_empa)) == 0) {
-            this.info = "OF : " + this.form.get('of')?.value + " ,agent: " + this.form.get('agent')?.value + ",Date : " + new Date().toLocaleString() + " , Qte : " + this.nb;
+  //       Swal.fire({
+  //         icon: 'error',
+  //         title: " l'ordre de fabrication et le code d'emballage ne correspondent pas  ",
+  //         html:
+  //           '<table>' +
+  //           '<tr><td>Code </td><td> <input type="password" id="swal-input1" value="" class="swal2-input" style="    margin-left: 16%;"    ></td></tr>' +
+  //           '</table>',
+  //         focusConfirm: false,
+  //         preConfirm: () => {
+  //           return [(<HTMLInputElement>document.getElementById('swal-input1')).value,
+  //           ]
+  //         },
+  //         allowOutsideClick: () => !Swal.isLoading()
+  //       }).then((result) => {
+  //         this.a = result.value
 
-            await this.delai(200);
-            window.print()
-            this.nb = 0;
-            this.nb_carton_10 = this.nb_carton_10 + 1
-          }
-        }
+  //         let test = this.a[2] || this.a[3]
+  //         if (result.isConfirmed) {
+  //           if (this.a[0] == 'utilisateur') {
+  //             this.test_correction_code = false
+  //             this.form.controls['code'].enable();
+  //             this.form.controls["code"].setValue("");
 
-        this.save_data_of()
-      }
+  //             this.ref_code.nativeElement.focus();
+
+  //           }
+  //           else {
+
+  //             Swal.fire({
+  //               text: 'Vérifier vos données',
+  //               imageUrl: './../assets/images/panne.png',
+  //               imageWidth: 400,
+  //               imageHeight: 400,
+
+  //             })
+  //           }
+  //         }
+  //       });
+
+  //     }
+
+  //     //  test produit redandance
+  //     else if (this.test_produit_redandance == true && this.test_code_produit == true && this.lancer_pb == false) {
+  //       for (let cpt = 0; cpt < this.liste_des_codes.length; cpt++) {
+  //         if (ch == this.liste_des_codes[cpt]) {
+  //           this.test_redandance = true
+  //         }
+  //       }
+  //       if (this.test_redandance) {
+  //         Swal.fire({
+  //           text: 'Redondance',
+  //           icon: 'error',
+  //         })
+  //         this.form.controls['code'].enable();
+  //         this.form.controls["code"].setValue("");
+  //         this.ref_code.nativeElement.focus();
+  //         this.lancer_pb = true
+  //       }
+  //       else {
+  //         this.liste_des_codes.push(ch)
+
+  //       }
+  //     }
 
 
-    }
-  }
+  //     // tous est bien ajouter data 
+  //     if (this.test_code == true && this.test_redandance == false && this.lancer_pb == false) {
+
+  //       this.value_code = this.form.get('code')?.value;
+  //       this.liste_des_codes.push(ch)
+  //       if (this.qte_dis_u == 1) {
+  //         let n = this.nb;
+  //         this.info = "OF : " + this.form.get('of')?.value + " ,agent: " + this.form.get('agent')?.value + ",Date : " + new Date().toLocaleString() + " , Qte : 1";
+  //         this.nb = 1;
+  //         await this.delai(300);
+  //         window.print()
+  //         if (Number(this.nb) < Number(this.qte_dis_empa)) {
+  //           this.nb = Number(n) + 1;
+  //         }
+  //         if ((Number(this.nb) % Number(this.qte_dis_empa)) == 0) {
+  //           this.info = "OF : " + this.form.get('of')?.value + " ,agent: " + this.form.get('agent')?.value + ",Date : " + new Date().toLocaleString() + " , Qte : " + this.nb;
+  //           await this.delai(300);
+  //           window.print()
+  //           this.nb = 0;
+  //           this.nb_carton_10 = this.nb_carton_10 + 1
+  //         }
+  //       }
+  //       else {
+  //         if (Number(this.nb) < Number(this.qte_dis_empa)) {
+  //           this.nb = Number(this.nb) + 1;
+  //         }
+  //         if ((Number(this.nb) % Number(this.qte_dis_empa)) == 0) {
+  //           this.info = "OF : " + this.form.get('of')?.value + " ,agent: " + this.form.get('agent')?.value + ",Date : " + new Date().toLocaleString() + " , Qte : " + this.nb;
+
+  //           await this.delai(200);
+  //           window.print()
+  //           this.nb = 0;
+  //           this.nb_carton_10 = this.nb_carton_10 + 1
+  //         }
+  //       }
+
+  //       this.save_data_of()
+  //     }
+
+
+  //   }
+  // }
 
 
   // chercher produit 
+  
   async chercher_produit(code: any) {
     let test = false;
 
@@ -669,10 +670,6 @@ export class Work2Component implements OnInit {
     this.save_data_of()
   }
 
- 
-
-
-
 
 
   correction_code() {
@@ -727,8 +724,7 @@ export class Work2Component implements OnInit {
     for (let j = 0; j < this.historique_of.length; j++) {
       if (this.historique_of[j].of == this.form.get('of')?.value) {
         i = j;
-        console.log(i)
-      }
+       }
     }
     if (i > -1) {
       this.historique_of[i].nb = this.nb;
@@ -982,4 +978,16 @@ export class Work2Component implements OnInit {
   sup_of() {
     this.form.controls["of"].setValue("");
   }
+
+  correction ()
+  {
+    let x  =  Number (this.liste_des_codes.length - this.nb) 
+    for (let i =  this.liste_des_codes.length ; i > x-1 ; i--)
+    {
+      this.liste_des_codes.splice(i,1)
+    }
+    this.nb=0
+
+  }
+
 }

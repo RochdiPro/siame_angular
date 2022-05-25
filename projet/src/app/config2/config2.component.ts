@@ -13,6 +13,7 @@ export class Config2Component implements OnInit {
   liste_agent: any = [];
   liste_of: any = [];
   accees_admin:any;
+  fileNameEmploye:any;
   constructor() {
     this.liste_produit = JSON.parse(localStorage.getItem('liste_produit_dis') + "");
     this.liste_agent = JSON.parse(localStorage.getItem('liste_agent_dis') + "");
@@ -154,8 +155,7 @@ export class Config2Component implements OnInit {
           this.obj.e100 = -1
           for(let  j= 0 ; j< this.liste_produit.length ; j++)
           {
-            console.log(this.a[1] == this.liste_produit[j].code)
-              if(this.a[1] == this.liste_produit[j].code)
+               if(this.a[1] == this.liste_produit[j].code)
               {
                 this.obj.e100 = 1
               }

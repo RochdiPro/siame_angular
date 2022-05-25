@@ -49,11 +49,11 @@
           <div class="col-md-11 main-card mb-2 card " style="margin-left: 2%;  margin-top: 1%;  " id="non-printable">
             Nombre Total des Cartons {{val_qte_reg}} est égale : {{nb_carton_10}}
             <div class="row" width="100%" style="text-align: center; margin-top: 6%; margin-bottom: 10%; ">
-              <div class="col-md-5">   <img src="./../../assets/images/prdoduit.png" width="200px" style="margin-top: 20%;">   </div>
-              <div class="col-md-7">  <h1 style="color: red; font-size: 300px;  margin-top: 40%; ">{{nb}}</h1>  </div>
+              <div class="col-md-4">   <img src="./../../assets/images/prdoduit.png" width="160px" style="margin-top: 40%;">   </div>
+              <div class="col-md-8">  <h1 style="color: red; font-size: 200px;  margin-top: 30%; ">{{nb}}</h1>  </div>
 
             </div>
-            <button type="button" style="margin-top: 3%;" class="btn btn-primary btn-sm">Correction </button>
+            <button type="button" style="margin-top: 3%;"  (click)="correction()" class="btn btn-primary btn-sm">Correction </button>
 
          
           </div>

@@ -36,7 +36,8 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { MenuComponent } from './menu/menu.component';
 import { Work2Component } from './work2/work2.component';
 import { Config2Component } from './config2/config2.component';
- 
+import {MatIconModule} from '@angular/material/icon';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -71,7 +72,8 @@ import { Config2Component } from './config2/config2.component';
     MatTableModule,
     MatSortModule,
     MatProgressBarModule,
-    NgxQRCodeModule
+    NgxQRCodeModule,
+    MatIconModule
   ],
   providers: [DatePipe , MatDatepickerModule,Printer,DocumentViewer,FileOpener  ,File , FilePath],
   bootstrap: [AppComponent]
